@@ -1,0 +1,316 @@
+/* --- Palete de Cores (Modelo Sage & Hearth do Stitch) --- */
+:root {
+    --bg-main: #F4EFEA;       /* Bege muito claro de fundo */
+    --bg-card: #FFFFFF;       /* Branco para os blocos/cards */
+    --primary: #4A5D4E;       /* Verde sálvia escuro */
+    --primary-light: #8FA494; /* Verde sálvia suave */
+    --accent: #8C6239;        /* Castanho café para destaques e textos secundários */
+    --text-dark: #2C2520;     /* Castanho quase preto para leitura */
+    --border-color: #E2D9D0;  /* Divisórias suaves */
+    --danger: #A94442;        /* Vermelho opaco para ações destrutivas */
+}
+
+/* --- Resets e Estilos Gerais --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-dark);
+    min-height: 100vh;
+}
+
+/* --- Simulador de Views (Topo da página) --- */
+#role-simulator {
+    background: #222;
+    color: #fff;
+    padding: 8px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-size: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+}
+#role-simulator button {
+    background: #444;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+#role-simulator button:hover {
+    background: var(--primary-light);
+}
+
+/* --- Controladores de Visibilidade --- */
+.view-section {
+    display: none;
+    min-height: calc(100vh - 34px);
+}
+.view-section.active {
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- Componentes Comuns (Botões e Inputs) --- */
+.btn-primary {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+.btn-primary:hover {
+    background-color: var(--primary-light);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.btn-small {
+    background-color: var(--accent);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+/* --- 1. Layout da Página Inicial (Landing) --- */
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 80px;
+    background: transparent;
+}
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--accent);
+}
+.logo span {
+    font-size: 14px;
+    color: var(--primary-light);
+}
+.main-header nav a {
+    text-decoration: none;
+    color: var(--text-dark);
+    margin-right: 20px;
+    font-weight: 500;
+}
+
+.hero-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 60px 80px;
+    flex: 1;
+}
+.hero-text {
+    max-width: 50%;
+}
+.hero-text h1 {
+    font-size: 48px;
+    color: var(--primary);
+    margin-bottom: 20px;
+}
+.hero-text p {
+    font-size: 18px;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+.hero-image .img-placeholder {
+    width: 350px;
+    height: 350px;
+    background-color: #EFE9E2;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 80px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    border: 1px solid var(--border-color);
+}
+
+/* --- Layout dos Painéis Internos (Dashboard / Cliente) --- */
+.dashboard-header {
+    background-color: var(--bg-card);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.dashboard-layout {
+    display: flex;
+    flex: 1;
+}
+
+.sidebar {
+    width: 260px;
+    background-color: var(--bg-card);
+    border-right: 1px solid var(--border-color);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.sidebar nav a {
+    display: block;
+    color: var(--text-dark);
+    text-decoration: none;
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+.sidebar nav a.active, .sidebar nav a:hover {
+    background-color: var(--bg-main);
+    color: var(--primary);
+}
+.nav-group {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--primary-light);
+    margin: 15px 0 5px 15px;
+    font-weight: bold;
+}
+
+.balance-card {
+    background-color: var(--primary);
+    color: white;
+    padding: 15px;
+    border-radius: 12px;
+    margin-top: 20px;
+}
+
+/* --- Área de Conteúdo Central --- */
+.content-area {
+    flex: 1;
+    padding: 4px 40px 40px 40px;
+    overflow-y: auto;
+}
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+.content-area h2 {
+    color: var(--primary);
+    margin: 25px 0;
+}
+
+/* --- Grid de Cards (Estilo Loja/Menu do Cliente) --- */
+.grid-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+}
+.card {
+    background: var(--bg-card);
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    transition: transform 0.2s;
+}
+.card:hover {
+    transform: translateY(-5px);
+}
+.card-img {
+    height: 180px;
+    background-color: #F9F6F0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+}
+.card-body {
+    padding: 20px;
+}
+.card-body h3 {
+    margin-bottom: 8px;
+    font-size: 18px;
+}
+.card-body p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 15px;
+    height: 40px;
+    overflow: hidden;
+}
+.card-body .price {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 15px;
+}
+
+/* --- Tabelas de Dados (Administração) --- */
+.table-container {
+    background: var(--bg-card);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+th, td {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+th {
+    background-color: #FDFBF9;
+    color: var(--primary);
+    font-weight: 600;
+}
+tr:last-child td {
+    border-bottom: none;
+}
+
+/* Badges de Roles */
+.badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+}
+.badge-admin { background: #E2ECE5; color: #2E5A44; }
+.badge-employee { background: #F3EBE3; color: #8C6239; }
+
+/* Botões de Ação na Tabela */
+.btn-action {
+    background: transparent;
+    border: none;
+    color: var(--primary);
+    cursor: pointer;
+    margin-right: 10px;
+    font-weight: 500;
+}
+.btn-action.btn-danger {
+    color: var(--danger);
+}

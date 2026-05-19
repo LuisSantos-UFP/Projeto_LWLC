@@ -1,11 +1,146 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Documento</title>
+    <title>Café Santuário</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
+
+    <div id="role-simulator">
+        <span>Simular Vista:</span>
+        <button onclick="switchView('landing')">Página Inicial</button>
+        <button onclick="switchView('client')">Área Cliente</button>
+        <button onclick="switchView('dashboard')">Painel Admin/Funcionário</button>
+    </div>
+
+    <section id="view-landing" class="view-section active">
+        <header class="main-header">
+            <div class="logo">Café Santuário</div>
+            <nav>
+                <a href="#menu">Menu</a>
+                <a href="#sobre">Sobre</a>
+                <button class="btn-primary" onclick="switchView('client')">Entrar</button>
+            </nav>
+        </header>
+
+        <main class="hero-container">
+            <div class="hero-text">
+                <h1>O Seu Santuário Diário</h1>
+                <p>Descubra os nossos cafés artesanais e pratos confecionados com amor e ingredientes frescos.</p>
+                <button class="btn-primary">Ver Menu do Dia</button>
+            </div>
+            <div class="hero-image">
+                <div class="img-placeholder">☕🥐</div>
+            </div>
+        </main>
+    </section>
+
+    <section id="view-client" class="view-section">
+        <header class="dashboard-header">
+            <div class="logo">Café Santuário <span>(Cliente)</span></div>
+            <button class="btn-secondary" onclick="switchView('landing')">Sair</button>
+        </header>
+
+        <div class="dashboard-layout">
+            <aside class="sidebar">
+                <nav>
+                    <a href="#" class="active">Especialidades</a>
+                    <a href="#">Fazer Pedido / Compra</a>
+                    <a href="#">O Meu Perfil</a>
+                </nav>
+                <div class="balance-card">
+                    <p>O seu Saldo:</p>
+                    <h3>15.50 €</h3>
+                </div>
+            </aside>
+
+            <main class="content-area">
+                <h2>Especiais do Dia</h2>
+                <div class="grid-cards">
+                    <div class="card">
+                        <div class="card-img">☕</div>
+                        <div class="card-body">
+                            <h3>Cappuccino Especial</h3>
+                            <p>Café expresso, leite vaporizado e uma pitada de canela.</p>
+                            <span class="price">3.20€</span>
+                            <button class="btn-small">Comprar</button>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-img">🍰</div>
+                        <div class="card-body">
+                            <h3>Tarta de Frutos Vermelhos</h3>
+                            <p>Massa folhada com creme pasteleiro e frutos frescos.</p>
+                            <span class="price">4.50€</span>
+                            <button class="btn-small">Comprar</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </section>
+
+    <section id="view-dashboard" class="view-section">
+        <header class="dashboard-header">
+            <div class="logo">Café Santuário <span>(Painel de Gestão)</span></div>
+            <button class="btn-secondary" onclick="switchView('landing')">Sair</button>
+        </header>
+
+        <div class="dashboard-layout">
+            <aside class="sidebar">
+                <nav>
+                    <div class="nav-group">Gestão Global</div>
+                    <a href="#" class="active">Gerir Utilizadores</a>
+                    <a href="#">Gerir Ingredientes</a>
+                    <a href="#">Gerir Pratos (Menu)</a>
+                    <div class="nav-group">Operações</div>
+                    <a href="#">Gerir Compras</a>
+                </nav>
+            </aside>
+
+            <main class="content-area">
+                <div class="content-header">
+                    <h2>Gestão de Utilizadores</h2>
+                    <button class="btn-primary">+ Adicionar Utilizador</button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Cargo (Role)</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Luís Santos</td>
+                                <td>luis@cafesantuario.pt</td>
+                                <td><span class="badge badge-admin">Admin</span></td>
+                                <td>
+                                    <button class="btn-action">Editar</button>
+                                    <button class="btn-action btn-danger">Eliminar</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Maria Silva</td>
+                                <td>maria@cafesantuario.pt</td>
+                                <td><span class="badge badge-employee">Employee</span></td>
+                                <td>
+                                    <button class="btn-action">Editar</button>
+                                    <button class="btn-action btn-danger">Eliminar</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
+    </section>
+     <script src="script.js"></script>
 </body>
 </html>
