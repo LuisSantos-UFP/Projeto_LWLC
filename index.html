@@ -16,26 +16,43 @@
     </div>
 
     <section id="view-landing" class="view-section active">
-        <header class="main-header">
-            <div class="logo">Café Santuário</div>
-            <nav>
-                <a href="#menu">Menu</a>
-                <a href="#sobre">Sobre</a>
-                <button class="btn-primary" onclick="switchView('client')">Entrar</button>
-            </nav>
-        </header>
+    <header class="main-header">
+        <div class="logo">Café Santuário</div>
+        <nav>
+            <a href="#menu">Menu</a>
+            <a href="#sobre">Sobre</a>
+            <button class="btn-primary" onclick="switchView('client')">Entrar</button>
+        </nav>
+    </header>
 
-        <main class="hero-container">
-            <div class="hero-text">
-                <h1>O Seu Santuário Diário</h1>
-                <p>Descubra os nossos cafés artesanais e pratos confecionados com amor e ingredientes frescos.</p>
-                <button class="btn-primary">Ver Menu do Dia</button>
+    <main class="hero-container">
+        <!-- Lado Esquerdo - Texto -->
+        <div class="hero-text">
+            <div class="cafe-badge">
+                ☕ CAFÉ SANTUÁRIO
             </div>
-            <div class="hero-image">
-                <div class="img-placeholder">☕🥐</div>
+            <h1 class="hero-title">
+                O Seu <span class="highlight">Santuário</span><br>
+                <span class="diario">Diário</span>
+            </h1>
+            
+            <p class="hero-description">
+                Onde os petiscos artesanais se encontram com o calor do lar. 
+                Experimente a harmonia perfeita entre o café acabado de moer e a pastelaria artesanal.
+            </p> 
+            <div class="hero-buttons">
+                <button class="btn-reserva">
+                    Fazer uma Reserva 
+                    <span style="margin-left:8px;">📅</span>
+                </button>
+                <button class="btn-menu">Ver Menu Completo</button>
             </div>
-        </main>
-    </section>
+        </div>
+        <div class="hero-image">
+            <img src="cafe-croissant-hero.jpg" alt="Café e Croissant">
+        </div>
+    </main>
+</section>
 
     <section id="view-client" class="view-section">
         <header class="dashboard-header">
