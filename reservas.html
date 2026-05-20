@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reservas | Café Santuário</title>
+
+    <link rel="stylesheet" href="reservas.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lato:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="main-header">
+
+        <div class="logo">
+            Café Santuário
+        </div>
+
+        <nav class="main-nav">
+            <a href="index.html" class="nav-link">Início</a>
+            <a href="menu.html" class="nav-link">Menu</a>
+            <a href="reservas.html" class="nav-link active">Reservas</a>
+        </nav>
+
+        <div class="header-icons">
+
+            <button class="icon-btn">
+                <i class="fa-solid fa-cart-shopping"></i>
+            </button>
+
+            <button class="icon-btn">
+                <a href="login.html" class="icon-btn" title="Perfil">
+                    <i class="fa-solid fa-user"></i>
+                </a>            
+            </button>
+
+        </div>
+
+    </header>
+
+    <!-- MAIN -->
+    <main class="reservas-container">
+
+        <!-- LEFT -->
+        <section class="reservas-left">
+
+            <div class="hero-text">
+
+                <h1>
+                    Garanta o Seu Refúgio
+                </h1>
+
+                <p>
+                    Escolha como deseja desfrutar da sua experiência.
+                </p>
+
+            </div>
+
+            <!-- SERVICE OPTIONS -->
+            <div class="service-options">
+
+                <button class="service-card active">
+                    <i class="fa-solid fa-utensils"></i>
+                    <h3>No Local</h3>
+                    <span>Reserva presencial</span>
+                </button>
+
+                <button class="service-card">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <h3>Recolha</h3>
+                    <span>Pickup</span>
+                </button>
+
+                <button class="service-card">
+                    <i class="fa-solid fa-bicycle"></i>
+                    <h3>Entrega</h3>
+                    <span>Delivery</span>
+                </button>
+
+            </div>
+
+            <!-- FORM -->
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>DATA</label>
+                    <input type="date">
+                </div>
+
+                <div class="form-group">
+                    <label>HORÁRIO</label>
+
+                    <select>
+                        <option>Selecionar horário</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <!-- PEDIDOS -->
+            <div class="section-header">
+                <h2>Os Seus Pedidos</h2>
+            </div>
+
+            <!-- BACKEND ITEMS -->
+            <div class="cards-grid" id="orders-container">
+
+                <!-- BACKEND INJECTS HERE -->
+
+            </div>
+
+            <!-- SUGESTÕES -->
+            <div class="section-header">
+                <h2>Sugestões para Si</h2>
+            </div>
+
+            <!-- BACKEND ITEMS -->
+            <div class="cards-grid" id="suggestions-container">
+
+                <!-- BACKEND INJECTS HERE -->
+
+            </div>
+
+        </section>
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+
+            <!-- RESUMO -->
+            <div class="sidebar-card">
+
+                <h2>Resumo do Pedido</h2>
+
+                <div id="summary-container">
+
+                    <!-- BACKEND INJECTS HERE -->
+
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="summary-item total">
+
+                    <span>Total</span>
+
+                    <span id="total-price">
+                        0,00 €
+                    </span>
+
+                </div>
+
+            </div>
+
+            <!-- DETALHES -->
+            <div class="sidebar-card">
+
+                <h2>Detalhes</h2>
+
+                <form class="details-form">
+
+                    <input type="text" placeholder="Nome Completo">
+
+                    <input type="text" placeholder="Telefone">
+
+                    <input type="email" placeholder="Email">
+
+                    <textarea placeholder="Pedido especial"></textarea>
+
+                    <button type="submit" class="confirm-btn">
+                        Confirmar Reserva
+                    </button>
+
+                </form>
+
+            </div>
+
+        </aside>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+
+        <div class="footer-grid">
+
+            <div class="footer-brand">
+
+                <div class="footer-logo">
+                    Café Santuário
+                </div>
+
+                <p class="footer-tagline">
+                    Criamos momentos de paz e sabor no coração da cidade.
+                </p>
+
+            </div>
+
+            <div class="footer-col">
+
+                <h4>EXPLORAR</h4>
+
+                <a href="#">Contactos</a>
+                <a href="#">Horário</a>
+
+            </div>
+
+            <div class="footer-col">
+
+                <h4>LEGAL</h4>
+
+                <a href="#">Política de Privacidade</a>
+                <a href="#">Termos</a>
+
+            </div>
+
+            <div class="footer-copy">
+                © 2024 Café Santuário
+            </div>
+
+        </div>
+
+    </footer>
+
+</body>
+</html>
