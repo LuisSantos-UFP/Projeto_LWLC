@@ -90,3 +90,38 @@ async function obterIngredientes() {
         console.error(erro);
     }
 }
+// ==========================================
+// CONTROLO DE ACESSOS E SESSÃO (RBAC)
+// ==========================================
+
+// 1. Verifica se existe sessão ativa. Se não, manda para o login.
+function verificarAutenticacao() {
+    const role = localStorage.getItem("userRole");
+    const token = localStorage.getItem("token");
+    
+    // Se o utilizador tentar aceder a qualquer página sem estar logado
+    if (!token || !role) {
+        localStorage.clear();
+        // Garante que se não estiver na página de login, é chutado para lá
+        if (!window.location.href.includes("login.html")) {
+            window.location.href = "login.html";
+        }
+        return null;
+    }
+    return role;
+}
+
+// 2. Protege páginas específicas contra escrita direta no URL
+function proibirAcessoSeNaoFor(rolesPermitidos) {
+    const roleAtual = verificarAutenticacao();
+    if (roleAtual && !rolesPermitidos.includes(roleAtual)) {
+        alert("Não tem permissão para aceder a esta página.");
+        window.location.href = "index.html"; 
+    }
+}
+
+// 3. Destrói a sessão ao clicar em Sair
+function efetuarLogout() {
+    localStorage.clear();
+    window.location.href = "login.html";
+}
