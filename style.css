@@ -188,6 +188,11 @@ body {
     transition: background 0.2s;
 }
 .btn-menu:hover { background-color: #e2d7c8; }
+
+.btn-reserva2 {
+    color: white;
+    text-decoration:none;
+}
  
 .hero-image { flex-shrink: 0; }
  
