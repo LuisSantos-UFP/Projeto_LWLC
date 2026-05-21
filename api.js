@@ -1,4 +1,4 @@
-
+// api.js
 const BASE_URL = "https://siws.ufp.pt/lwlc/api";
 
 // Função utilitária para ajudar a fazer pedidos POST
@@ -25,23 +25,23 @@ async function postData(endpoint, data) {
     }
 }
 
-async function registarUtilizador(username, password, name) {
-    // Validação básica no frontend antes de enviar (obrigatório no enunciado!)
-    if (!username || !password || !name) {
+async function registarUtilizador(utilizador, password) {
+    // Validação básica no frontend apenas com os campos necessários
+    if (!utilizador || !password) {
         alert("Por favor, preencha todos os campos.");
         return;
     }
 
+    // Enviando apenas as duas chaves que a API pede
     const dadosRegisto = {
-        username: username,
-        password: password,
-        name: name
+        utilizador: utilizador,
+        password: password
     };
 
     try {
-        const resultado = await postData("/auth/register", dadosRegisto); // Ajustem o endpoint conforme o Swagger
+        await postData("/auth/register", dadosRegisto); 
         alert("Conta criada com sucesso! Já pode fazer login.");
-        // Redirecionar para a página de login
+        window.location.href = "login.html";
     } catch (erro) {
         alert("Erro ao criar conta: " + erro.message);
     }
@@ -54,19 +54,25 @@ async function loginUtilizador(username, password) {
     }
 
     try {
-        const resposta = await postData("/auth/login", { username, password }); // Ajustem o endpoint
+        const resposta = await postData("/auth/login", { username, password }); 
         
-        // Assumindo que a API devolve um objeto como: { token: "...", user: { role: "CLIENT" } }
         if (resposta.token) {
             localStorage.setItem("token", resposta.token);
-            localStorage.setItem("userRole", resposta.user.role); // Útil para esconder/mostrar botões
             
-            alert("Login efetuado com sucesso!");
-            // Redirecionar para a página principal (dashboard / menu)
-            window.location.href = "index.html"; 
+            // Pega o cargo retornado pela API (Ex: "ADMIN", "EMPLOYEE", "CLIENT")
+            const role = resposta.userRole || (resposta.user && resposta.user.role) || "CLIENT";
+            localStorage.setItem("userRole", role); 
+            
+            // CRUCIAL: Guarda também no formato objeto minúsculo para o renderNavbar ler!
+            const userObj = { role: role.toLowerCase() }; // Converte "ADMIN" para "admin"
+            localStorage.setItem("user", JSON.stringify(userObj));
+            
+            // REMOVIDO o redirecionamento daqui! 
+            // Agora quem redireciona é o auth.js, LOGO APÓS mostrar o alert de sucesso.
         }
     } catch (erro) {
         alert("Falha no login: " + erro.message);
+        throw erro; // IMPORTANTE: Lança o erro para o auth.js saber que falhou
     }
 }
 
@@ -77,7 +83,7 @@ async function obterIngredientes() {
         const response = await fetch(`${BASE_URL}/ingredients`, {
             method: "GET",
             headers: {
-                "Authorization": `Bearer ${token}`, // É assim que o JWT é enviado
+                "Authorization": `Bearer ${token}`, // Envio do JWT
                 "Content-Type": "application/json"
             }
         });
@@ -89,39 +95,4 @@ async function obterIngredientes() {
     } catch (erro) {
         console.error(erro);
     }
-}
-// ==========================================
-// CONTROLO DE ACESSOS E SESSÃO (RBAC)
-// ==========================================
-
-// 1. Verifica se existe sessão ativa. Se não, manda para o login.
-function verificarAutenticacao() {
-    const role = localStorage.getItem("userRole");
-    const token = localStorage.getItem("token");
-    
-    // Se o utilizador tentar aceder a qualquer página sem estar logado
-    if (!token || !role) {
-        localStorage.clear();
-        // Garante que se não estiver na página de login, é chutado para lá
-        if (!window.location.href.includes("login.html")) {
-            window.location.href = "login.html";
-        }
-        return null;
-    }
-    return role;
-}
-
-// 2. Protege páginas específicas contra escrita direta no URL
-function proibirAcessoSeNaoFor(rolesPermitidos) {
-    const roleAtual = verificarAutenticacao();
-    if (roleAtual && !rolesPermitidos.includes(roleAtual)) {
-        alert("Não tem permissão para aceder a esta página.");
-        window.location.href = "index.html"; 
-    }
-}
-
-// 3. Destrói a sessão ao clicar em Sair
-function efetuarLogout() {
-    localStorage.clear();
-    window.location.href = "login.html";
 }

@@ -1,5 +1,7 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Lato:wght@400;500;600&display=swap');
+/* ==========================================================================
+   1. CONFIGURAÇÕES GLOBAIS, IMPORTAÇÕES E VARIÁVEIS (:root)
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Lato:wght@400;500;600;700&display=swap');
  
 :root {
     --bg-main: #F5F0E8;
@@ -22,11 +24,12 @@ body {
     background-color: var(--bg-main);
     color: var(--text-dark);
 }
- 
-/* -------------------------------
-   HEADER
-------------------------------- */
- 
+
+/* ==========================================================================
+   2. ELEMENTOS REUTILIZÁVEIS DA ESTRUTURA (HEADER & FOOTER)
+   ========================================================================== */
+
+/* HEADER GLOBAL */
 .main-header {
     display: flex;
     justify-content: space-between;
@@ -47,6 +50,9 @@ body {
     display: flex;
     gap: 36px;
     align-items: center;
+    list-style: none !important;
+    padding: 0;
+    margin: 0;
 }
  
 .nav-link {
@@ -95,13 +101,96 @@ body {
     padding: 4px;
     border-radius: 6px;
     transition: color 0.2s;
+    font-size: 18px;
 }
 .icon-btn:hover { color: var(--primary); }
+
+/* FOOTER GLOBAL */
+.site-footer {
+    background: #1C2E21;
+    padding: 48px 60px 32px;
+}
  
-/* -------------------------------
-   HERO
-------------------------------- */
+.footer-grid {
+    display: grid;
+    grid-template-columns: 1.8fr 1fr 1fr 1.5fr;
+    gap: 40px;
+    align-items: start;
+}
  
+.footer-logo {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 10px;
+}
+ 
+.footer-tagline {
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.6;
+    margin-bottom: 16px;
+    max-width: 200px;
+}
+ 
+.footer-social {
+    display: flex;
+    gap: 12px;
+}
+ 
+.social-icon {
+    color: rgba(255,255,255,0.45);
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+}
+.social-icon:hover { color: #fff; }
+ 
+.footer-col-title, .footer-col h4 {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+
+.footer-col {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+ 
+.footer-links, .footer-col a {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+    text-decoration: none;
+}
+.footer-links a, .footer-col a {
+    color: rgba(255,255,255,0.65);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.footer-links a:hover, .footer-col a:hover { color: #fff; }
+ 
+.footer-copy {
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    text-align: right;
+    align-self: end;
+    padding-bottom: 2px;
+}
+
+/* ==========================================================================
+   3. ESTILOS DO INDEX PRINCIPAL (HERO, ESPECIAIS, CTA)
+   ========================================================================== */
+
+/* HERO (INDEX) */
 .hero-container {
     display: flex;
     align-items: center;
@@ -173,8 +262,7 @@ body {
     transition: background 0.2s;
 }
 .btn-reserva:hover { background-color: #3d6347; }
- 
-.btn-icon { font-size: 16px; }
+ .btn-icon { font-size: 16px; }
  
 .btn-menu {
     background-color: #EDE4D9;
@@ -195,7 +283,6 @@ body {
 }
  
 .hero-image { flex-shrink: 0; }
- 
 .hero-image img {
     width: 100%;
     max-width: 420px;
@@ -207,10 +294,7 @@ body {
     object-fit: cover;
 }
  
-/* -------------------------------
-   ESPECIAIS DO DIA
-------------------------------- */
- 
+/* ESPECIAIS DO DIA */
 .especiais-section {
     background: #F0EBE0;
     padding: 60px 60px 80px;
@@ -248,7 +332,6 @@ body {
     background: var(--bg-card);
 }
  
-/* Featured — left column, both rows */
 .especial-card--featured {
     grid-column: 1;
     grid-row: 1 / 3;
@@ -321,7 +404,6 @@ body {
     font-size: 19px;
 }
  
-/* Small card — Pastel de Nata */
 .especial-card--small {
     grid-column: 2;
     grid-row: 1;
@@ -339,8 +421,7 @@ body {
     font-size: 80px;
     min-height: 0;
 }
- 
-.small-img img { width: 100%; height: 100%; object-fit: cover; }
+ .small-img img { width: 100%; height: 100%; object-fit: cover; }
  
 .small-body {
     padding: 16px 20px 18px;
@@ -384,7 +465,6 @@ body {
 }
 .btn-add:hover { background: #3d6347; }
  
-/* Bottom row right: Torra + Tosta */
 .especiais-bottom-right {
     grid-column: 2;
     grid-row: 2;
@@ -393,7 +473,6 @@ body {
     gap: 16px;
 }
  
-/* Dark card — Torra Artesanal */
 .especial-card--dark {
     background: #2D4A35;
     color: #fff;
@@ -453,7 +532,6 @@ body {
     pointer-events: none;
 }
  
-/* Horizontal card — Tosta de Abacate */
 .especial-card--horizontal {
     display: flex;
     align-items: center;
@@ -503,13 +581,9 @@ body {
     justify-content: center;
     font-size: 56px;
 }
+ .horizontal-img img { width: 100%; height: 100%; object-fit: cover; }
  
-.horizontal-img img { width: 100%; height: 100%; object-fit: cover; }
- 
-/* -------------------------------
-   DESTAQUES DO MENU
-------------------------------- */
- 
+/* DESTAQUES DO MENU BACKGROUND VERDE */
 .menu-section {
     background: #2D4A35;
     padding: 70px 60px;
@@ -606,10 +680,7 @@ body {
     line-height: 1.5;
 }
  
-/* -------------------------------
-   CTA — ENCONTRE A SUA MESA
-------------------------------- */
- 
+/* SECTION CTA CAIXA DE RESERVA */
 .cta-section {
     background: #F0EBE0;
     padding: 60px 60px;
@@ -670,80 +741,769 @@ body {
     font-weight: 500;
     color: var(--text-dark);
 }
- 
-/* -------------------------------
-   FOOTER
-------------------------------- */
- 
-.site-footer {
-    background: #1C2E21;
-    padding: 48px 60px 32px;
-}
- 
-.footer-grid {
+
+/* ==========================================================================
+   4. ESTILOS DO LOGIN (`login.css`)
+   ========================================================================== */
+.login-page {
+    min-height: 100vh;
     display: grid;
-    grid-template-columns: 1.8fr 1fr 1fr 1.5fr;
-    gap: 40px;
-    align-items: start;
+    grid-template-columns: 1fr 1fr;
 }
- 
-.footer-logo {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-size: 18px;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 10px;
-}
- 
-.footer-tagline {
-    font-size: 12px;
-    color: rgba(255,255,255,0.45);
-    line-height: 1.6;
-    margin-bottom: 16px;
-    max-width: 200px;
-}
- 
-.footer-social {
+
+.login-left {
+    position: relative;
+    background: linear-gradient(rgba(24,34,28,0.55), rgba(24,34,28,0.55)), url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1400&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
     display: flex;
-    gap: 12px;
+    align-items: flex-end;
+    padding: 60px;
 }
- 
-.social-icon {
-    color: rgba(255,255,255,0.45);
-    transition: color 0.2s;
+
+.left-content {
+    position: relative;
+    z-index: 2;
+    max-width: 500px;
+}
+
+.login-page .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 24px;
+}
+
+.left-content h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 72px;
+    line-height: 1;
+    color: #fff;
+    margin-bottom: 24px;
+}
+
+.left-content p {
+    color: rgba(255,255,255,0.85);
+    font-size: 16px;
+    line-height: 1.8;
+    max-width: 420px;
+}
+
+.login-right {
     display: flex;
     align-items: center;
+    justify-content: center;
+    padding: 60px;
 }
-.social-icon:hover { color: #fff; }
- 
-.footer-col-title {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    color: rgba(255,255,255,0.4);
-    text-transform: uppercase;
-    margin-bottom: 14px;
+
+.login-box {
+    width: 100%;
+    max-width: 460px;
+    background: #fff;
+    padding: 50px;
+    border-radius: 32px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.06);
 }
- 
-.footer-links {
-    list-style: none;
+
+.login-header { margin-bottom: 36px; }
+.login-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+.login-header p {
+    color: #7A6F65;
+    line-height: 1.7;
+}
+
+.login-form {
     display: flex;
     flex-direction: column;
+    gap: 22px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.input-group label {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 0 18px;
+    background: #fff;
+}
+.input-wrapper i { color: #8B8177; }
+.input-wrapper input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: none;
+    padding: 16px 0;
+    font-size: 15px;
+}
+
+.login-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: -4px;
+}
+
+.remember {
+    display: flex;
+    align-items: center;
     gap: 8px;
+    font-size: 14px;
+    color: #6B6157;
 }
- 
-.footer-links a {
-    font-size: 13px;
-    color: rgba(255,255,255,0.65);
+
+.login-options a {
+    font-size: 14px;
+    color: var(--primary);
     text-decoration: none;
-    transition: color 0.2s;
+    font-weight: 600;
 }
-.footer-links a:hover { color: #fff; }
- 
-.footer-copy {
+
+.login-btn {
+    margin-top: 8px;
+    border: none;
+    background: var(--primary);
+    color: #fff;
+    padding: 16px;
+    border-radius: 50px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.login-btn:hover { background: #3d6347; }
+
+.divider {
+    position: relative;
+    text-align: center;
+    margin: 30px 0;
+}
+.divider::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 1px;
+    background: var(--border-color);
+}
+.divider span {
+    position: relative;
+    background: #fff;
+    padding: 0 14px;
+    color: #8B8177;
+    font-size: 14px;
+}
+
+.google-btn {
+    width: 100%;
+    border: 1px solid var(--border-color);
+    background: #fff;
+    padding: 15px;
+    border-radius: 50px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: 0.2s;
+}
+.google-btn:hover { background: #f7f4ef; }
+
+.register-text {
+    text-align: center;
+    margin-top: 28px;
+    font-size: 14px;
+    color: #6B6157;
+}
+.register-text a {
+    color: var(--primary);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.back-home {
+    position: absolute;
+    top: 40px;
+    left: 60px;
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: white;
+    text-decoration: none;
+    transition: 0.2s;
+    z-index: 10;
+}
+.back-home:hover { opacity: 0.75; }
+
+/* ==========================================================================
+   5. ESTILOS DO MENU DE PRODUTOS (`menu.css`)
+   ========================================================================== */
+.menu-hero { padding: 80px 60px 50px; }
+.menu-hero-content { max-width: 700px; }
+
+.menu-badge {
+    display: inline-block;
+    background: #EDE4D9;
+    color: var(--primary);
+    font-size: 13px;
+    padding: 6px 14px;
+    border-radius: 30px;
+    margin-bottom: 20px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.menu-hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 68px;
+    color: var(--primary);
+    line-height: 1.1;
+    margin-bottom: 18px;
+}
+
+.menu-hero p {
+    max-width: 520px;
+    color: #6B6157;
+    line-height: 1.7;
+    font-size: 16px;
+}
+
+.menu-container {
+    display: flex;
+    gap: 30px;
+    padding: 0 60px 80px;
+}
+
+.menu-sidebar {
+    width: 260px;
+    background: #fff;
+    border-radius: 24px;
+    padding: 28px;
+    height: fit-content;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.04);
+}
+
+.menu-sidebar h3 {
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 22px;
+    font-size: 26px;
+    color: var(--primary);
+}
+
+.category-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.category-btn {
+    border: none;
+    background: #EFE7DB;
+    color: var(--text-dark);
+    padding: 14px 18px;
+    border-radius: 14px;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.2s;
+    font-weight: 600;
+}
+.category-btn:hover { background: #e5dbcd; }
+.category-btn.active {
+    background: var(--primary);
+    color: #fff;
+}
+
+.menu-content { flex: 1; }
+
+.menu-placeholder {
+    background: #fff;
+    border-radius: 28px;
+    padding: 100px 40px;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.04);
+}
+
+.placeholder-icon {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: #EFE7DB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+.placeholder-icon i {
+    font-size: 42px;
+    color: var(--primary);
+}
+
+.menu-placeholder h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 40px;
+    color: var(--primary);
+    margin-bottom: 14px;
+}
+
+.menu-placeholder p {
+    color: #6B6157;
+    max-width: 500px;
+    line-height: 1.7;
+}
+
+/* ==========================================================================
+   6. ESTILOS DAS RESERVAS (`reservas.css`)
+   ========================================================================== */
+.reservas-container {
+    display: flex;
+    gap: 28px;
+    padding: 20px 60px 60px;
+    align-items: flex-start;
+}
+
+.reservas-left { flex: 1; }
+
+.reservas-left .hero-text h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+.reservas-left .hero-text p {
+    color: #6B6157;
+    margin-bottom: 30px;
+}
+
+.service-options {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 18px;
+    margin-bottom: 30px;
+}
+
+.service-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 28px 20px;
+    text-align: center;
+    transition: 0.2s;
+    cursor: pointer;
+}
+.service-card:hover { transform: translateY(-3px); }
+.service-card.active { border: 2px solid var(--primary); }
+
+.service-card i {
+    font-size: 24px;
+    color: var(--primary);
+    margin-bottom: 12px;
+}
+.service-card h3 {
+    margin-bottom: 5px;
+    font-size: 18px;
+}
+.service-card span {
+    font-size: 13px;
+    color: #777;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #7A6F65;
+}
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    border: 1px solid var(--border-color);
+    background: #fff;
+    outline: none;
+}
+
+.section-header { margin-bottom: 20px; }
+.section-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: var(--text-dark);
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 22px;
+    margin-bottom: 40px;
+}
+
+.food-card {
+    background: #fff;
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+.food-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+
+.food-content { padding: 20px; }
+
+.food-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+.food-top h3 { font-size: 18px; }
+.food-price {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.food-content p {
+    font-size: 14px;
+    color: #777;
+    line-height: 1.6;
+    margin-bottom: 18px;
+}
+
+.food-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.food-actions a {
+    color: #9A3E3E;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.quantity-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.quantity-box button {
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 50%;
+    background: #E8E2D8;
+    cursor: pointer;
+}
+
+.add-btn {
+    width: 100%;
+    border: none;
+    padding: 14px;
+    border-radius: 14px;
+    background: #ECE4D8;
+    color: var(--primary);
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.add-btn:hover { background: #dfd4c4; }
+
+.sidebar {
+    width: 360px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.sidebar-card {
+    background: #fff;
+    border-radius: 24px;
+    padding: 28px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+.sidebar-card h2 {
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 22px;
+    color: var(--text-dark);
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    font-size: 15px;
+}
+
+.sidebar-card .divider {
+    height: 1px;
+    background: var(--border-color);
+    margin: 20px 0;
+}
+
+.summary-item.total {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.details-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+.details-form input, .details-form textarea {
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    border: 1px solid var(--border-color);
+    outline: none;
+    resize: none;
+}
+.details-form textarea { height: 120px; }
+
+.confirm-btn {
+    margin-top: 10px;
+    border: none;
+    padding: 16px;
+    border-radius: 50px;
+    background: var(--primary);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.confirm-btn:hover { background: #3d6347; }
+
+/* ==========================================================================
+   7. ADICIONAL: CLASSES ESPECÍFICAS PARA A PÁGINA DE PERFIL (`perfil.html`)
+   ========================================================================== */
+.perfil-container {
+    max-width: 600px;
+    margin: 60px auto;
+    padding: 30px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.04);
+}
+
+.perfil-header {
+    text-align: center;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 20px;
+    margin-bottom: 25px;
+}
+
+.perfil-avatar {
+    font-size: 64px;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+.perfil-titulo {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: var(--text-dark);
+    margin: 0;
+}
+
+.perfil-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 30px;
+    margin-top: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Badges Dinâmicos com base nas cores do teu sistema */
+.badge-admin { background-color: #FEE2E2; color: #DC2626; border: 1px solid #FCA5A5; }
+.badge-employee { background-color: #E0F2FE; color: #0284C7; border: 1px solid #7DD3FC; }
+.badge-client { background-color: #EDE4D9; color: var(--primary); border: 1px solid var(--border-color); }
+
+.info-group {
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    padding: 14px 18px;
+    background: #FAF8F5;
+    border-radius: 16px;
+    border-left: 4px solid var(--primary);
+    border: 1px solid var(--border-color);
+    border-left-width: 4px;
+}
+
+.info-icon {
+    font-size: 18px;
+    color: var(--primary);
+    width: 35px;
+    text-align: left;
+}
+
+.info-detalhes { flex: 1; }
+
+.info-label {
     font-size: 11px;
-    color: rgba(255,255,255,0.3);
-    text-align: right;
-    align-self: end;
-    padding-bottom: 2px;
+    color: #8B8177;
+    text-transform: uppercase;
+    margin: 0;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.info-valor {
+    font-size: 15px;
+    color: var(--text-dark);
+    margin-top: 2px;
+    font-weight: 500;
+}
+
+.token-box {
+    font-family: monospace;
+    font-size: 11px;
+    background: #F0EBE0;
+    padding: 10px;
+    border-radius: 8px;
+    max-height: 80px;
+    overflow-y: auto;
+    color: #5A5248;
+    border: 1px solid var(--border-color);
+    margin-top: 6px;
+    word-break: break-all;
+}
+
+/* ==========================================================================
+   8. REGRAS DE MEDIA QUERIES (RESPONSIVIDADE)
+   ========================================================================== */
+@media(max-width: 1100px) {
+    .menu-container, .reservas-container {
+        flex-direction: column;
+    }
+    .menu-sidebar, .sidebar {
+        width: 100%;
+    }
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media(max-width: 1000px) {
+    .login-page {
+        grid-template-columns: 1fr;
+    }
+    .login-left {
+        display: none;
+    }
+    .login-right {
+        padding: 30px 20px;
+    }
+    .login-box {
+        padding: 40px 28px;
+    }
+    .login-header h2 {
+        font-size: 34px;
+    }
+}
+
+@media(max-width: 768px) {
+    .main-header {
+        flex-direction: column;
+        gap: 18px;
+    }
+    .hero-container {
+        flex-direction: column;
+        padding: 30px 20px 40px;
+        gap: 40px;
+    }
+    .hero-title {
+        font-size: 48px;
+    }
+    .hero-image img {
+        max-width: 100%;
+    }
+    .especiais-section, .menu-section, .cta-section {
+        padding: 40px 20px;
+    }
+    .especiais-title {
+        font-size: 32px;
+    }
+    .especiais-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+    }
+    .especial-card--featured, .especial-card--small, .especiais-bottom-right {
+        grid-column: 1;
+        grid-row: auto;
+    }
+    .especiais-bottom-right {
+        grid-template-columns: 1fr;
+    }
+    .menu-grid, .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    .menu-hero {
+        padding: 60px 20px 40px;
+    }
+    .menu-hero h1 {
+        font-size: 48px;
+    }
+    .menu-container, .reservas-container {
+        padding: 0 20px 60px;
+    }
+    .hero-text h1 {
+        font-size: 40px;
+    }
+    .service-options, .form-grid {
+        grid-template-columns: 1fr;
+    }
+    .site-footer {
+        padding: 40px 20px;
+    }
+    .footer-copy {
+        text-align: left;
+    }
+    .back-home {
+        top: 20px;
+        left: 20px;
+    }
 }

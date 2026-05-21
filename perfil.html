@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O Meu Perfil - Café Santuário</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">Café Santuário</div>
+        <ul class="main-nav" id="main-navbar"></ul>
+        <div class="header-icons"></div>
+    </header>
+
+    <main class="perfil-container">
+        <div class="perfil-header">
+            <div class="perfil-avatar">
+                <i class="fa-solid fa-circle-user"></i>
+            </div>
+            <h2 id="perfil-username" class="perfil-titulo">A carregar...</h2>
+            <span id="role-badge" class="perfil-badge">A carregar...</span>
+        </div>
+
+        <div class="perfil-corpo">
+            <div class="info-group">
+                <div class="info-icon"><i class="fa-solid fa-id-card"></i></div>
+                <div class="info-detalhes">
+                    <p class="info-label">Cargo na Base de Dados</p>
+                    <p id="info-role-detalhado" class="info-valor">-</p>
+                </div>
+            </div>
+
+            <div class="info-group">
+                <div class="info-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                <div class="info-detalhes">
+                    <p class="info-label">Estado da Ligação</p>
+                    <p class="info-valor" style="color: #2ecc71; font-weight: bold;">
+                        <i class="fa-solid fa-circle-check"></i> Sessão Autenticada
+                    </p>
+                </div>
+            </div>
+
+            <div class="info-group" style="align-items: flex-start;">
+                <div class="info-icon" style="margin-top: 10px;"><i class="fa-solid fa-key"></i></div>
+                <div class="info-detalhes">
+                    <p class="info-label">Token de Acesso (JWT da API)</p>
+                    <div id="info-token" class="token-box">Nenhum token detetado.</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="main.js"></script>
+    <script src="perfil.js"></script>
+</body>
+</html>
