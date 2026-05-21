@@ -22,7 +22,7 @@ body{
     color:var(--text-dark);
 }
 
-/* ═════════ HEADER ═════════ */
+/* --------- HEADER --------- */
 
 .main-header{
     display:flex;
@@ -79,7 +79,7 @@ body{
     font-size:18px;
 }
 
-/* ═════════ MAIN ═════════ */
+/* --------- MAIN --------- */
 
 .reservas-container{
     display:flex;
@@ -360,7 +360,7 @@ body{
     background:#3d6347;
 }
 
-/* ═════════ FOOTER ═════════ */
+/* --------- FOOTER --------- */
 
 .site-footer{
     background:#1C2E21;
