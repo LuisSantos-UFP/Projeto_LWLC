@@ -7,7 +7,7 @@ localStorage.setItem("user", JSON.stringify({ role: "admin" }));
 // ===============================================
 
 const token = localStorage.getItem("token");
-const role = localStorage.getItem("userRole"); 
+const role = localStorage.getItem("userRole");  
 const paginaAtual = window.location.pathname;
 
 // Se tentar entrar na página de admin e não for ADMIN
@@ -54,10 +54,7 @@ function renderNavbar() {
     if (!navbarContainer) return;
 
     // Criamos a estrutura diretamente com as tags <li> contendo a classe nav-link
-    let navLinks = `
-        <li><a href="index.html" class="nav-link">Início</a></li>
-        <li><a href="menu.html" class="nav-link">Menu</a></li>
-    `;
+    let navLinks = ``;
 
     if (currentUser.role === 'admin' || storedRole === "ADMIN") {
         navLinks += `
