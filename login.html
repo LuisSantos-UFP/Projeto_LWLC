@@ -72,9 +72,9 @@
                         <label>Utilizador</label>
 
                         <div class="input-wrapper">
-                            <i class="fa-regular fa-envelope"></i>
+                            <i class="fa-regular fa-user"></i>
 
-                            <input type="text" placeholder="Utilizador">
+                            <input type="text" placeholder="Utilizador" maxlength="30" required>
                         </div>
 
                     </div>
@@ -86,7 +86,9 @@
                         <div class="input-wrapper">
                             <i class="fa-solid fa-lock"></i>
 
-                            <input type="password" placeholder="••••••••">
+                            <input type="password" id="password" placeholder="••••••••" maxlength="30" required>
+
+                            <i class="fa-regular fa-eye toggle-password-icon" id="togglePassword"></i>
                         </div>
 
                     </div>
@@ -142,7 +144,7 @@
     </main>
 
     <script src="api.js"></script>
-    <script src="auth.js"></script>
+    <script src="login.js"></script>
     <script src="main.js"></script>
 
 </body>

@@ -68,11 +68,11 @@ async function loginUtilizador(username, password) {
             localStorage.setItem("user", JSON.stringify(userObj));
             
             // REMOVIDO o redirecionamento daqui! 
-            // Agora quem redireciona é o auth.js, LOGO APÓS mostrar o alert de sucesso.
+            // Agora quem redireciona é o login.js, LOGO APÓS mostrar o alert de sucesso.
         }
     } catch (erro) {
         alert("Falha no login: " + erro.message);
-        throw erro; // IMPORTANTE: Lança o erro para o auth.js saber que falhou
+        throw erro; // IMPORTANTE: Lança o erro para o login.js saber que falhou
     }
 }
 
