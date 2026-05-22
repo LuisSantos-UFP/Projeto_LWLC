@@ -14,16 +14,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 2. Tenta descobrir o username guardado pelo login
-    let usernameExibir = "Utilizador Autenticado";
+    let usernameExibir = "Utilizador";
     if (userObjString) {
         try {
             const userObj = JSON.parse(userObjString);
             if (userObj.username) {
                 usernameExibir = userObj.username;
+            } else if (userObj.name) {
+                usernameExibir = userObj.name;
             }
         } catch(e) {
             console.error("Erro ao ler o objeto de utilizador:", e);
         }
+    }
+    // Fallback: tenta buscar o username diretamente do localStorage
+    if (usernameExibir === "Utilizador") {
+        const directUsername = localStorage.getItem('username');
+        if (directUsername) usernameExibir = directUsername;
     }
 
     // 3. Aplica os dados nos elementos do HTML
@@ -44,9 +51,4 @@ document.addEventListener('DOMContentLoaded', () => {
         badge.className = 'perfil-badge badge-client';
     }
 
-    // 5. Injeta o token na caixinha de desenvolvimento
-    const tokenBox = document.getElementById('info-token');
-    if (tokenBox && storedToken) {
-        tokenBox.textContent = storedToken;
-    }
 });

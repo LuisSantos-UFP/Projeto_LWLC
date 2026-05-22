@@ -63,7 +63,6 @@ function renderNavbar() {
         navLinks += `
             <li><a href="admin.html" class="nav-link nav-admin">Painel Admin</a></li>
             <li><a href="gestao.html" class="nav-link nav-admin">Sala de Gestão</a></li>
-            <li><a href="reservas.html" class="nav-link nav-admin">Reservas</a></li>
         `;
     } else if (currentUser.role === 'employee' || storedRole === "EMPLOYEE") {
         navLinks += `
@@ -71,9 +70,7 @@ function renderNavbar() {
             <li><a href="employee-dashboard.html" class="nav-link nav-emp">Pedidos</a></li>
         `;
     } else if (currentUser.role === 'client' || storedRole === "CLIENT") {
-        navLinks += `
-            <li><a href="reservas.html" class="nav-link">Reservar Mesa</a></li>
-        `;
+        navLinks += ``;
     }
 
     navbarContainer.innerHTML = navLinks;
@@ -81,7 +78,7 @@ function renderNavbar() {
     if (headerIcons) {
         if (token) {
             headerIcons.innerHTML = `
-                <a href="carrinho.html" class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></a>
+                <a href="reservas.html" class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></a>
                 <a href="perfil.html" id="perfil-btn" class="icon-btn" title="O Meu Perfil" style="color: #c5a880; margin-left: 12px; font-size: 18px;">
                     <i class="fa-solid fa-user-gear"></i>
                 </a>
@@ -91,7 +88,7 @@ function renderNavbar() {
             `;
         } else {
             headerIcons.innerHTML = `
-                <a href="carrinho.html" class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></a>
+                <a href="reservas.html" class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></a>
                 <a href="login.html" class="icon-btn" title="Entrar"><i class="fa-solid fa-user"></i></a>
             `;
         }

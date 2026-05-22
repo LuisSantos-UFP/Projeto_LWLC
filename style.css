@@ -1507,3 +1507,609 @@ body {
         left: 20px;
     }
 }
+
+/* ==========================================================================
+   9. PAINEL DE GESTÃO (DASHBOARD ADMINISTRATIVO)
+   ========================================================================== */
+
+/* Variáveis e Configurações de Escopo Específicas do Painel Geral */
+.app-container {
+    --bg-sidebar: #f2ebd9;
+    --bg-main-dashboard: #fcfaf2;
+    --primary-green: #415a42;
+    --primary-green-hover: #324633;
+    --text-dark-dash: #2c3531;
+    --text-muted-dash: #6e7571;
+    --card-bg-dash: #f7f5ed;
+    --card-shadow-dash: 0 4px 12px rgba(0, 0, 0, 0.03);
+    --accent-orange-dash: #d4a373;
+    --status-active-bg: #d8f3dc;
+    --status-active-text: #1b4332;
+    --status-offline-bg: #e9ecef;
+    --status-offline-text: #6c757d;
+    --border-color-dash: #e1dacb;
+}
+
+/* Layout em Tabela para compatibilidade e robustez administrativo */
+.app-container {
+    display: table;
+    width: 100%;
+    height: 100vh;
+    border-collapse: collapse;
+    background-color: var(--bg-main-dashboard);
+    color: var(--text-dark-dash);
+}
+
+.sidebar-cell {
+    display: table-cell;
+    width: 240px;
+    background-color: var(--bg-sidebar);
+    vertical-align: top;
+    padding: 30px 20px;
+    border-right: 1px solid var(--border-color-dash);
+    position: relative;
+}
+
+.main-cell {
+    display: table-cell;
+    vertical-align: top;
+    padding: 40px;
+    background-color: var(--bg-main-dashboard);
+}
+
+/* --- SIDEBAR --- */
+.sidebar-cell .brand {
+    margin-bottom: 40px;
+}
+
+.sidebar-cell .brand-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--primary-green);
+}
+
+.sidebar-cell .brand-subtitle {
+    font-size: 11px;
+    color: var(--text-muted-dash);
+    letter-spacing: 0.5px;
+}
+
+.sidebar-cell .nav-menu {
+    list-style: none !important;
+}
+
+.sidebar-cell .nav-item {
+    margin-bottom: 8px;
+}
+
+.sidebar-cell .nav-link {
+    display: block;
+    padding: 12px 16px;
+    color: var(--text-dark-dash);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 20px;
+    transition: all 0.2s ease;
+}
+
+.sidebar-cell .nav-link:hover {
+    background-color: rgba(65, 90, 66, 0.05);
+    color: var(--primary-green-hover);
+}
+
+.sidebar-cell .nav-link.active {
+    background-color: var(--primary-green);
+    color: #ffffff;
+}
+
+.sidebar-cell .nav-link svg {
+    vertical-align: middle;
+    margin-right: 10px;
+    width: 16px;
+    height: 16px;
+}
+
+/* Sidebar Footer Fixed Position Simulation */
+.sidebar-footer {
+    position: absolute;
+    bottom: 30px;
+    left: 20px;
+    right: 20px;
+}
+
+.btn-view-site {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background-color: #fceade;
+    color: #b57c4a;
+    text-align: center;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(181, 124, 74, 0.2);
+    transition: background-color 0.2s;
+}
+
+.btn-view-site:hover {
+    background-color: #fcdfcb;
+}
+
+.user-profile-summary {
+    display: table;
+    width: 100%;
+}
+
+.user-avatar-cell {
+    display: table-cell;
+    width: 40px;
+    vertical-align: middle;
+}
+
+.user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: var(--primary-green);
+    object-fit: cover;
+}
+
+.user-info-cell {
+    display: table-cell;
+    vertical-align: middle;
+    padding-left: 10px;
+}
+
+.user-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-dark-dash);
+}
+
+.user-role {
+    font-size: 11px;
+    color: var(--text-muted-dash);
+}
+
+/* --- MAIN CONTENT --- */
+/* Alteração: Margem reduzida e remoção completa de qualquer borda inferior ou sombra */
+.header-container {
+    display: table;
+    width: 100%;
+    margin-bottom: 20px;
+    border-bottom: none !important;
+    box-shadow: none !important;
+}
+
+.header-title-cell {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.page-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary-green);
+    margin-bottom: 4px;
+}
+
+.page-subtitle {
+    font-size: 14px;
+    color: var(--text-muted-dash);
+}
+
+.header-action-cell {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: right;
+}
+
+.date-badge {
+    display: inline-block;
+    padding: 10px 16px;
+    background-color: var(--card-bg-dash);
+    border: 1px solid var(--border-color-dash);
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-dark-dash);
+}
+
+.date-badge svg {
+    vertical-align: middle;
+    margin-right: 6px;
+    width: 14px;
+    height: 14px;
+}
+
+/* Grid de Métricas (Cards Superiores) */
+.metrics-row {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    border-spacing: 20px 0;
+    margin-left: -20px;
+    margin-right: -20px;
+    margin-bottom: 30px;
+}
+
+.metric-card-cell {
+    display: table-cell;
+    background-color: var(--card-bg-dash);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: var(--card-shadow-dash);
+    border: 1px solid rgba(225, 218, 203, 0.5);
+    vertical-align: top;
+}
+
+.card-header-row {
+    display: table;
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+.card-icon-cell {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.card-icon-wrapper {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: rgba(65, 90, 66, 0.08);
+    text-align: center;
+}
+
+.card-icon-wrapper svg {
+    margin-top: 10px;
+    width: 20px;
+    height: 20px;
+    fill: var(--primary-green);
+}
+
+.card-badge-cell {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: right;
+}
+
+.percentage-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 12px;
+}
+
+.percentage-badge.orange {
+    background-color: #fff3e0;
+    color: #ef6c00;
+}
+
+.status-badge-inline {
+    display: inline-block;
+    padding: 4px 10px;
+    background-color: #e1ecf4;
+    color: #39739d;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 12px;
+    letter-spacing: 0.5px;
+}
+
+.metric-label {
+    font-size: 13px;
+    color: var(--text-muted-dash);
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+.metric-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-dark-dash);
+}
+
+/* Bloco Inferior: Gráfico e Tabela */
+.content-row {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    border-spacing: 20px 0;
+    margin-left: -20px;
+    margin-right: -20px;
+}
+
+.chart-cell {
+    display: table-cell;
+    width: 40%;
+    background-color: var(--card-bg-dash);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: var(--card-shadow-dash);
+    border: 1px solid rgba(225, 218, 203, 0.5);
+    vertical-align: top;
+}
+
+.table-cell {
+    display: table-cell;
+    width: 60%;
+    background-color: var(--card-bg-dash);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: var(--card-shadow-dash);
+    border: 1px solid rgba(225, 218, 203, 0.5);
+    vertical-align: top;
+}
+
+.section-card-title-row {
+    display: table;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.section-card-title {
+    display: table-cell;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary-green);
+    vertical-align: middle;
+}
+
+.section-card-action {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+}
+
+.btn-action-trigger {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted-dash);
+    padding: 4px;
+}
+
+.btn-invite-member {
+    background-color: var(--primary-green);
+    color: #ffffff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-invite-member:hover {
+    background-color: var(--primary-green-hover);
+}
+
+/* Componente Utilitário de Gráfico / Placeholder para API */
+.chart-container-placeholder {
+    min-height: 200px;
+    position: relative;
+}
+
+.chart-metrics-summary {
+    margin-top: 20px;
+    border-top: 1px solid var(--border-color-dash);
+    padding-top: 15px;
+}
+
+.summary-inline-item {
+    display: inline-block;
+    width: 48%;
+}
+
+.summary-inline-label {
+    font-size: 12px;
+    color: var(--text-muted-dash);
+}
+
+.summary-inline-value {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-dark-dash);
+    margin-top: 2px;
+}
+
+/* --- DATA TABLE --- */
+.data-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.custom-dashboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.custom-dashboard-table th {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted-dash);
+    padding: 12px 8px;
+    border-bottom: 1px solid var(--border-color-dash);
+    font-weight: 600;
+}
+
+.custom-dashboard-table td {
+    padding: 14px 8px;
+    border-bottom: 1px solid rgba(225, 218, 203, 0.4);
+    vertical-align: middle;
+    font-size: 13px;
+}
+
+.member-profile-block {
+    display: table;
+}
+
+.member-avatar-cell {
+    display: table-cell;
+    vertical-align: middle;
+    width: 32px;
+}
+
+.member-avatar-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--accent-orange-dash);
+    color: #ffffff;
+    text-align: center;
+    line-height: 32px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.member-info-cell {
+    display: table-cell;
+    vertical-align: middle;
+    padding-left: 10px;
+}
+
+.member-fullname {
+    font-weight: 600;
+    color: var(--text-dark-dash);
+}
+
+.member-email-address {
+    font-size: 11px;
+    color: var(--text-muted-dash);
+    margin-top: 1px;
+}
+
+.status-pill {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.status-pill.active {
+    background-color: var(--status-active-bg);
+    color: var(--status-active-text);
+}
+
+.status-pill.offline {
+    background-color: var(--status-offline-bg);
+    color: var(--status-offline-text);
+}
+
+.btn-table-action {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted-dash);
+    padding: 6px;
+    border-radius: 4px;
+}
+
+.btn-table-action:hover {
+    color: var(--text-dark-dash);
+    background-color: rgba(0,0,0,0.03);
+}
+
+/* --- SYSTEM CONFIGURATION BAR --- */
+.system-config-container {
+    margin-top: 30px;
+    background-color: var(--card-bg-dash);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: var(--card-shadow-dash);
+    border: 1px solid rgba(225, 218, 203, 0.5);
+    display: table;
+    width: 100%;
+}
+
+.config-icon-cell {
+    display: table-cell;
+    width: 50px;
+    vertical-align: middle;
+}
+
+.config-text-cell {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.config-btn-cell {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+    width: 200px;
+}
+
+.btn-global-config {
+    background-color: #ffffff;
+    color: var(--text-dark-dash);
+    border: 1px solid var(--border-color-dash);
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-global-config:hover {
+    background-color: #faf9f5;
+}
+
+/* --- FOOTER REGION --- */
+.footer-credits-container {
+    margin-top: 40px;
+    border-top: 1px solid var(--border-color-dash);
+    padding-top: 20px;
+    display: table;
+    width: 100%;
+}
+
+.footer-copy-cell {
+    display: table-cell;
+    font-size: 11px;
+    color: var(--text-muted-dash);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.footer-links-cell {
+    display: table-cell;
+    text-align: right;
+}
+
+.footer-link-item {
+    font-size: 11px;
+    color: var(--text-muted-dash);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-left: 20px;
+}
+
+.svg-icon {
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+    fill: currentColor;
+}
+
+/* Remove a linha decorativa inferior dos links ativos na sidebar */
+.sidebar-cell .nav-menu .nav-link.active::after {
+    display: none !important;
+    content: none !important;
+}
