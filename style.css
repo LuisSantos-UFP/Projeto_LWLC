@@ -840,6 +840,7 @@ body {
 }
 
 .input-wrapper {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -857,6 +858,14 @@ body {
     padding: 16px 0;
     font-size: 15px;
 }
+
+.toggle-password-icon {
+    position: absolute;
+    right: 15px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+.toggle-password-icon:hover {color: #333}
 
 .login-options {
     display: flex;
