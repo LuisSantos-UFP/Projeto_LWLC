@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
+ 
     <div class="app-container">
         
         <aside class="sidebar-cell">
@@ -28,13 +28,13 @@
                 <li class="nav-item">
                     <a href="dishes.html" class="nav-link">
                         <svg class="svg-icon" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-                        Editor de Menu
+                        Gestão de Pratos
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="menugestao.html" class="nav-link">
                         <svg class="svg-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 14H4v-4h11v4zm0-5H4V9h11v4zm5 5h-4V9h4v9z"/></svg>
-                        Inventário
+                        Gestão de menus
                     </a>
                 </li>
                 <li class="nav-item">
@@ -50,7 +50,7 @@
                     </a>
                 </li>
             </ul>
-
+ 
             <div class="sidebar-footer">
                 <a href="#" class="btn-view-site">
                     <svg class="svg-icon" style="width:14px; height:14px; margin-right:4px;" viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
@@ -68,7 +68,7 @@
                 </div>
             </div>
         </aside>
-
+ 
         <main class="main-cell">
             
             <header class="header-container">
@@ -83,7 +83,7 @@
                     </div>
                 </div>
             </header>
-
+ 
             <section class="metrics-row">
                 
                 <div class="metric-card-cell" id="kpi-card-reservas">
@@ -100,7 +100,7 @@
                     <div class="metric-label">Total de Reservas</div>
                     <div class="metric-value" id="api-metric-reservas-count">--</div>
                 </div>
-
+ 
                 <div class="metric-card-cell" id="kpi-card-receita">
                     <div class="card-header-row">
                         <div class="card-icon-cell">
@@ -115,7 +115,7 @@
                     <div class="metric-label">Receita Diária</div>
                     <div class="metric-value" id="api-metric-receita-amount">--</div>
                 </div>
-
+ 
                 <div class="metric-card-cell" id="kpi-card-equipa">
                     <div class="card-header-row">
                         <div class="card-icon-cell">
@@ -130,9 +130,9 @@
                     <div class="metric-label">Equipa Ativa</div>
                     <div class="metric-value" id="api-metric-equipa-count">--</div>
                 </div>
-
+ 
             </section>
-
+ 
             <div class="content-row">
                 
                 <div class="chart-cell" id="section-container-vendas-grafico">
@@ -146,7 +146,7 @@
                     </div>
                     
                     <div class="chart-container-placeholder" id="api-chart-canvas-wrapper"></div>
-
+ 
                     <div class="chart-metrics-summary">
                         <div class="summary-inline-item">
                             <div class="summary-inline-label">Ticket Médio</div>
@@ -158,7 +158,7 @@
                         </div>
                     </div>
                 </div>
-
+ 
                 <div class="table-cell" id="section-container-equipa-tabela">
                     <div class="section-card-title-row">
                         <div>
@@ -169,7 +169,7 @@
                             <button class="btn-invite-member" id="action-trigger-convidar-membro">+ Convidar Membro</button>
                         </div>
                     </div>
-
+ 
                     <div class="data-table-wrapper">
                         <table class="custom-dashboard-table">
                             <thead>
@@ -184,9 +184,9 @@
                         </table>
                     </div>
                 </div>
-
+ 
             </div>
-
+ 
             <section class="system-config-container" id="section-container-config-sistema">
                 <div class="config-icon-cell">
                     <div class="card-icon-wrapper" style="margin-top: 0;">
@@ -201,7 +201,7 @@
                     <button class="btn-global-config" id="action-trigger-definicoes-globais">Abrir Definições Globais</button>
                 </div>
             </section>
-
+ 
             <footer class="footer-credits-container">
                 <div class="footer-copy-cell">
                     &copy; <span id="current-footer-year-display">2026</span> Café Santuário. Todos os direitos reservados.
@@ -212,11 +212,11 @@
                     <a href="#" class="footer-link-item">Termos</a>
                 </div>
             </footer>
-
+ 
         </main>
-
+ 
     </div>
-
+ 
     <script>
         function updateDashboardDate() {
             const today = new Date();
