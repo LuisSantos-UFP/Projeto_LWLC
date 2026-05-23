@@ -59,10 +59,10 @@ async function deleteData(endpoint) {
     return handleResponse(response);
 }
 
-async function uploadImagem(endpoint, formData) {
+async function uploadImagem(endpoint, formData, method = "POST") {
     // SEM Content-Type — o browser define automaticamente com o boundary correto
     const response = await fetch(`${BASE_URL}${endpoint}`, {
-        method: "POST",
+        method: method,
         headers: getAuthHeaders(true),
         body: formData
     });

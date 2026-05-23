@@ -129,13 +129,8 @@ function templatePratos() {
             </div>
 
             <div class="form-group">
-                <label>Tipo *</label>
-                <select id="input-tipo-prato">
-                    <option value="">-- Selecionar tipo --</option>
-                    <option value="MEAT">🥩 Carne</option>
-                    <option value="FISH">🐟 Peixe</option>
-                    <option value="VEGETARIAN">🥗 Vegetariano</option>
-                </select>
+                <label>Preço (€) *</label>
+                <input type="number" id="input-preco-prato" placeholder="0.00" step="0.01" min="0">
             </div>
 
             <div class="form-group">
@@ -180,33 +175,44 @@ function renderizarPratos(pratos) {
         return;
     }
 
-    const tipoLabel = { MEAT: '🥩 Carne', FISH: '🐟 Peixe', VEGETARIAN: '🥗 Vegetariano' };
-    const tipoClass = { MEAT: 'meat',     FISH: 'fish',     VEGETARIAN: 'vegetarian'      };
-
     grid.innerHTML = pratos.map(p => {
-        const imgHtml = p.imageUrl
-            ? `<div class="dish-card-img"><img src="${p.imageUrl}" alt="${p.name}"></div>`
-            : `<div class="dish-card-img">🍽️</div>`;
+        const ingredientes = [...new Set(p.ingredientNames || [])].join(', ') || 'Sem ingredientes';
+        const preco = p.price ? `${parseFloat(p.price).toFixed(2)} €` : '';
+        const imgId = `img-${p.id.replace(/-/g, '')}`;
         return `
         <div class="dish-card">
-            ${imgHtml}
+            <div class="dish-card-img" id="${imgId}">🍽️</div>
             <div class="dish-card-body">
                 <div class="dish-card-name">${p.name}</div>
-                <span class="dish-type-badge ${tipoClass[p.type] || ''}">${tipoLabel[p.type] || p.type}</span>
+                <div style="font-size:12px;color:#777;margin-bottom:6px;">🌿 ${ingredientes}</div>
+                <div style="font-size:16px;font-weight:800;color:#2d6a4f;">${preco}</div>
             </div>
             <div class="dish-card-actions">
-                <button class="btn-edit-dish"   onclick="editarPrato(${p.id})">✏️ Editar</button>
-                <button class="btn-delete-dish" onclick="apagarPrato(${p.id}, '${p.name}')">🗑️ Apagar</button>
+                <button class="btn-edit-dish"   onclick='editarPrato(${JSON.stringify(JSON.stringify(p))})'>✏️ Editar</button>
+                <button class="btn-delete-dish" onclick="apagarPrato('${p.id}', '${p.name.replace(/'/g,"\\'")}')">🗑️ Apagar</button>
             </div>
         </div>`;
     }).join('');
+
+    // Carrega imagens via presigned URL (assíncrono, não bloqueia o render)
+    pratos.forEach(async p => {
+        if (!p.imageUrl) return;
+        try {
+            const res = await getData(`/dishes/${p.id}/image-url`);
+            const url = res?.url || res;
+            if (!url) return;
+            const imgId = `img-${p.id.replace(/-/g, '')}`;
+            const el = document.getElementById(imgId);
+            if (el) el.innerHTML = `<img src="${url}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.innerHTML='🍽️'">`;
+        } catch {}
+    });
 }
 
 async function abrirModalPrato() {
     idEmEdicao = null;
     document.getElementById('modal-prato-titulo').textContent = 'Novo Prato';
     document.getElementById('input-nome-prato').value = '';
-    document.getElementById('input-tipo-prato').value = '';
+    document.getElementById('input-preco-prato').value = '';
     document.getElementById('input-imagem-prato').value = '';
     document.getElementById('modal-prato').classList.add('active');
     await preencherIngredientesModal();
@@ -216,18 +222,14 @@ function fecharModalPrato() {
     document.getElementById('modal-prato').classList.remove('active');
 }
 
-async function editarPrato(id) {
-    try {
-        const p = await getData(`/dishes/${id}`);
-        idEmEdicao = id;
-        document.getElementById('modal-prato-titulo').textContent = 'Editar Prato';
-        document.getElementById('input-nome-prato').value = p.name || '';
-        document.getElementById('input-tipo-prato').value = p.type || '';
-        document.getElementById('modal-prato').classList.add('active');
-        await preencherIngredientesModal(p.ingredients || []);
-    } catch (e) {
-        mostrarToast('Erro ao carregar prato.', 'error');
-    }
+function editarPrato(pratoJson) {
+    const p = JSON.parse(pratoJson);
+    idEmEdicao = p.id;
+    document.getElementById('modal-prato-titulo').textContent = 'Editar Prato';
+    document.getElementById('input-nome-prato').value = p.name || '';
+    document.getElementById('input-preco-prato').value = p.price || '';
+    document.getElementById('modal-prato').classList.add('active');
+    preencherIngredientesModal(p.ingredientNames || []);
 }
 
 async function preencherIngredientesModal(selecionados = []) {
@@ -239,14 +241,18 @@ async function preencherIngredientesModal(selecionados = []) {
             container.innerHTML = `<p style="color:#aaa;font-size:13px;">Sem ingredientes disponíveis.</p>`;
             return;
         }
-        const idsSelecionados = selecionados.map(i => i.id ?? i);
+            // Normaliza os selecionados para comparação (trim + lowercase)
+        const selecionadosNorm = selecionados.map(s => s.trim().toLowerCase());
         container.innerHTML = ings.map(i => `
-            <label style="display:flex;align-items:center;gap:8px;padding:4px 6px;
-                          border-radius:6px;cursor:pointer;font-size:13px;color:#333;">
-                <input type="checkbox" value="${i.id}" name="ing"
-                    ${idsSelecionados.includes(i.id) ? 'checked' : ''}>
-                ${i.name}
-                <span style="margin-left:auto;font-size:11px;color:#aaa;">${i.type}</span>
+            <label style="display:flex;align-items:center;gap:8px;padding:6px 8px;
+                          border-radius:6px;cursor:pointer;font-size:13px;color:#333;
+                          transition:background 0.15s;" 
+                   onmouseover="this.style.background='#f0f0f0'" 
+                   onmouseout="this.style.background='transparent'">
+                <input type="checkbox" value="${i.name}" name="ing"
+                    ${selecionadosNorm.includes(i.name.trim().toLowerCase()) ? 'checked' : ''}>
+                <span style="flex:1;">${i.name}</span>
+                <span style="font-size:11px;color:#aaa;background:#f5f5f5;padding:2px 6px;border-radius:10px;">${i.type}</span>
             </label>`).join('');
     } catch {
         container.innerHTML = `<p style="color:#aaa;font-size:13px;">Erro ao carregar ingredientes.</p>`;
@@ -255,32 +261,26 @@ async function preencherIngredientesModal(selecionados = []) {
 
 async function guardarPrato() {
     const nome = document.getElementById('input-nome-prato').value.trim();
-    const tipo = document.getElementById('input-tipo-prato').value;
-
+    const preco = parseFloat(document.getElementById('input-preco-prato').value);
     if (!nome) { mostrarToast('O nome do prato é obrigatório.', 'error'); return; }
-    if (!/^[a-zA-ZÀ-ÿ\s]+$/.test(nome)) { mostrarToast('O nome só pode conter letras e espaços.', 'error'); return; }
-    if (!tipo) { mostrarToast('Seleciona o tipo do prato.', 'error'); return; }
+    if (isNaN(preco) || preco < 0) { mostrarToast('Insira um preço válido.', 'error'); return; }
 
     const ingredientesSelecionados = [...document.querySelectorAll('#ingredientes-container input[name="ing"]:checked')]
-        .map(cb => parseInt(cb.value));
+        .map(cb => cb.value);
 
-    const dados = { name: nome, type: tipo, ingredientIds: ingredientesSelecionados };
+    // multipart/form-data: parte 'dish' como JSON + parte 'image' opcional
+    const dishObj = { name: nome, price: preco, ingredientNames: ingredientesSelecionados };
+    const ficheiroImg = document.getElementById('input-imagem-prato').files[0];
+    const formData = new FormData();
+    formData.append('dish', new Blob([JSON.stringify(dishObj)], { type: 'application/json' }));
+    if (ficheiroImg) formData.append('image', ficheiroImg);
 
     try {
         if (idEmEdicao) {
-            await putData(`/dishes/${idEmEdicao}`, dados);
+            await uploadImagem(`/dishes/${idEmEdicao}`, formData, 'PUT');
             mostrarToast('Prato atualizado com sucesso!');
         } else {
-            const novoPrato = await postData('/dishes', dados);
-
-            // Upload de imagem imediatamente após criação
-            const ficheiroImg = document.getElementById('input-imagem-prato').files[0];
-            if (ficheiroImg && novoPrato?.id) {
-                const formData = new FormData();
-                formData.append('image', ficheiroImg);
-                // TODO: confirmar endpoint exato na documentação da API dos professores
-                await uploadImagem(`/dishes/${novoPrato.id}/image`, formData);
-            }
+            await uploadImagem('/dishes', formData, 'POST');
             mostrarToast('Prato criado com sucesso!');
         }
         fecharModalPrato();
@@ -404,9 +404,9 @@ function renderizarMenus(menus) {
 
     grid.innerHTML = menus.map(m => {
         const data       = formatarDataCompleta(m.date);
-        const pratoCarne = m.meatDish?.name        || null;
-        const pratoPeixe = m.fishDish?.name        || null;
-        const pratoVeg   = m.vegetarianDish?.name  || null;
+        const pratoCarne = m.meatDishName        || null;
+        const pratoPeixe = m.fishDishName        || null;
+        const pratoVeg   = m.vegetarianDishName  || null;
 
         return `
         <div class="menu-card">
@@ -468,31 +468,47 @@ async function editarMenu(id) {
         document.getElementById('input-data-menu').value = m.date || '';
         document.getElementById('modal-menu').classList.add('active');
         await preencherSelectsPratos(
-            m.meatDish?.id        || '',
-            m.fishDish?.id        || '',
-            m.vegetarianDish?.id  || ''
+            m.meatDishName       || '',
+            m.fishDishName       || '',
+            m.vegetarianDishName || ''
         );
     } catch (e) {
         mostrarToast('Erro ao carregar menu.', 'error');
     }
 }
 
-async function preencherSelectsPratos(idCarne = '', idPeixe = '', idVeg = '') {
+async function preencherSelectsPratos(nomeCarne = '', nomePeixe = '', nomeVeg = '') {
     try {
-        const pratos = await getData('/dishes');
-        const carne  = pratos.filter(p => p.type === 'MEAT');
-        const peixe  = pratos.filter(p => p.type === 'FISH');
-        const veg    = pratos.filter(p => p.type === 'VEGETARIAN');
+        const [pratos, ingredientes] = await Promise.all([
+            getData('/dishes'),
+            getData('/ingredients')
+        ]);
 
-        const optionHtml = (lista, valorAtual) =>
-            lista.map(p => `<option value="${p.id}" ${p.id == valorAtual ? 'selected' : ''}>${p.name}</option>`).join('');
+        // Mapa nome -> tipo do ingrediente
+        const tipoIng = {};
+        ingredientes.forEach(i => { tipoIng[i.name] = i.type; });
+
+        // Classifica prato pelo tipo dominante dos ingredientes
+        function classificar(p) {
+            const tipos = (p.ingredientNames || []).map(n => tipoIng[n] || '');
+            if (tipos.includes('MEAT')) return 'MEAT';
+            if (tipos.includes('FISH')) return 'FISH';
+            return 'VEGETARIAN';
+        }
+
+        const carne = pratos.filter(p => classificar(p) === 'MEAT');
+        const peixe = pratos.filter(p => classificar(p) === 'FISH');
+        const veg   = pratos.filter(p => classificar(p) === 'VEGETARIAN');
+
+        const optionHtml = (lista, nomeAtual) =>
+            lista.map(p => `<option value="${p.name}" ${p.name === nomeAtual ? 'selected' : ''}>${p.name}</option>`).join('');
 
         document.getElementById('select-carne').innerHTML =
-            `<option value="">— Sem prato de carne —</option>${optionHtml(carne, idCarne)}`;
+            `<option value="">— Sem prato de carne —</option>${optionHtml(carne, nomeCarne)}`;
         document.getElementById('select-peixe').innerHTML =
-            `<option value="">— Sem prato de peixe —</option>${optionHtml(peixe, idPeixe)}`;
+            `<option value="">— Sem prato de peixe —</option>${optionHtml(peixe, nomePeixe)}`;
         document.getElementById('select-veg').innerHTML =
-            `<option value="">— Sem prato vegetariano —</option>${optionHtml(veg, idVeg)}`;
+            `<option value="">— Sem prato vegetariano —</option>${optionHtml(veg, nomeVeg)}`;
     } catch {
         mostrarToast('Erro ao carregar pratos para o menu.', 'error');
     }
@@ -509,12 +525,13 @@ async function guardarMenu() {
         mostrarToast('A data do menu tem de ser futura.', 'error'); return;
     }
 
-    const dados = {
-        date:             data,
-        meatDishId:       document.getElementById('select-carne').value || null,
-        fishDishId:       document.getElementById('select-peixe').value || null,
-        vegetarianDishId: document.getElementById('select-veg').value   || null,
-    };
+    const dados = { date: data };
+    const carne = document.getElementById('select-carne').value;
+    const peixe = document.getElementById('select-peixe').value;
+    const veg   = document.getElementById('select-veg').value;
+    if (carne) dados.meatDishName       = carne;
+    if (peixe) dados.fishDishName       = peixe;
+    if (veg)   dados.vegetarianDishName = veg;
 
     try {
         if (idEmEdicao) {

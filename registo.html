@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Conta | Café Santuário</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lato:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+    <main class="login-page">
+
+        <section class="login-left">
+            <div class="overlay"></div>
+            <div class="left-content">
+                <span class="badge">☕ CAFÉ SANTUÁRIO</span>
+                <h1>Junte-se ao<br>Santuário</h1>
+                <p>Crie a sua conta para guardar as suas preferências, gerir reservas e aceder a experiências exclusivas.</p>
+            </div>
+        </section>
+
+        <section class="login-right">
+            <div class="form-container">
+                
+                <header class="form-header">
+                    <h2>Criar Nova Conta</h2>
+                    <p>Preencha os dados abaixo para se registar.</p>
+                </header>
+
+                <form id="register-form" class="auth-form">
+    
+                 <div class="form-group">
+                        <label for="reg-username">Nome de Utilizador (Username)</label>
+                        <input type="text" id="reg-username" placeholder="Escolha um username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-password">Palavra-passe</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="reg-password" placeholder="••••••••" minlength="6" maxlength="30" required>
+                            <i class="fa-regular fa-eye toggle-password-icon" id="toggleRegPassword"></i>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="login-btn">
+                        Registar Conta
+                    </button>
+
+                </form>
+
+                <p class="register-text">
+                    Já tem uma conta? 
+                    <a href="login.html">Iniciar Sessão</a>
+                </p>
+
+            </div>
+        </section>
+
+    </main>
+
+    <script src="api.js"></script>
+    <script src="registo.js"></script>
+    <script>
+        // Lógica visual rápida para alternar a visibilidade da password
+        const togglePassword = document.getElementById('toggleRegPassword');
+        const passwordInput = document.getElementById('reg-password');
+
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+    </script>
+</body>
+</html>
