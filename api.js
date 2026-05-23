@@ -1,45 +1,82 @@
 // api.js
 const BASE_URL = "https://siws.ufp.pt/lwlc/api";
 
-// Função utilitária para ajudar a fazer pedidos POST
-async function postData(endpoint, data) {
-    try {
-        const response = await fetch(`${BASE_URL}${endpoint}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        });
-
-        // Se o servidor responder com erro (ex: 400, 401)
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || "Ocorreu um erro no servidor.");
-        }
-
-        return await response.json();
-    } catch (error) {
-        console.error("Erro no pedido:", error);
-        throw error;
-    }
+// ── Cabeçalhos com token ──────────────────────────────────────
+function getAuthHeaders(isFormData = false) {
+    const token = localStorage.getItem("token");
+    const headers = {};
+    if (!isFormData) headers["Content-Type"] = "application/json";
+    if (token) headers["Authorization"] = `Bearer ${token}`;
+    return headers;
 }
 
+// ── Tratamento de resposta centralizado ──────────────────────
+async function handleResponse(response) {
+    if (!response.ok) {
+        let msg = `Erro ${response.status}`;
+        try {
+            const err = await response.json();
+            msg = err.message || JSON.stringify(err);
+        } catch {}
+        throw new Error(msg);
+    }
+    if (response.status === 204) return null; // DELETE sem corpo
+    return response.json();
+}
+
+// ── Funções genéricas (usadas pelo gestao.js) ─────────────────
+async function getData(endpoint) {
+    const response = await fetch(`${BASE_URL}${endpoint}`, {
+        method: "GET",
+        headers: getAuthHeaders()
+    });
+    return handleResponse(response);
+}
+
+async function postData(endpoint, data) {
+    const response = await fetch(`${BASE_URL}${endpoint}`, {
+        method: "POST",
+        headers: getAuthHeaders(),
+        body: JSON.stringify(data)
+    });
+    return handleResponse(response);
+}
+
+async function putData(endpoint, data) {
+    const response = await fetch(`${BASE_URL}${endpoint}`, {
+        method: "PUT",
+        headers: getAuthHeaders(),
+        body: JSON.stringify(data)
+    });
+    return handleResponse(response);
+}
+
+async function deleteData(endpoint) {
+    const response = await fetch(`${BASE_URL}${endpoint}`, {
+        method: "DELETE",
+        headers: getAuthHeaders()
+    });
+    return handleResponse(response);
+}
+
+async function uploadImagem(endpoint, formData) {
+    // SEM Content-Type — o browser define automaticamente com o boundary correto
+    const response = await fetch(`${BASE_URL}${endpoint}`, {
+        method: "POST",
+        headers: getAuthHeaders(true),
+        body: formData
+    });
+    return handleResponse(response);
+}
+
+// ── Funções de autenticação ───────────────────────────────────
 async function registarUtilizador(utilizador, password) {
-    // Validação básica no frontend apenas com os campos necessários
     if (!utilizador || !password) {
         alert("Por favor, preencha todos os campos.");
         return;
     }
-
-    // Enviando apenas as duas chaves que a API pede
-    const dadosRegisto = {
-        utilizador: utilizador,
-        password: password
-    };
-
     try {
-        await postData("/auth/register", dadosRegisto); 
+        await postData("/auth/register", { utilizador, password });
         alert("Conta criada com sucesso! Já pode fazer login.");
         window.location.href = "login.html";
     } catch (erro) {
@@ -52,47 +89,16 @@ async function loginUtilizador(username, password) {
         alert("Preencha o utilizador e a senha.");
         return;
     }
+    const resposta = await postData("/auth/login", { username, password });
 
-    try {
-        const resposta = await postData("/auth/login", { username, password }); 
-        
-        if (resposta.token) {
-            localStorage.setItem("token", resposta.token);
-            
-            // Pega o cargo retornado pela API (Ex: "ADMIN", "EMPLOYEE", "CLIENT")
-            const role = resposta.userRole || (resposta.user && resposta.user.role) || "CLIENT";
-            localStorage.setItem("userRole", role); 
-            
-            // CRUCIAL: Guarda também no formato objeto minúsculo para o renderNavbar ler!
-            const userObj = { role: role.toLowerCase() }; // Converte "ADMIN" para "admin"
-            localStorage.setItem("user", JSON.stringify(userObj));
-            
-            // REMOVIDO o redirecionamento daqui! 
-            // Agora quem redireciona é o login.js, LOGO APÓS mostrar o alert de sucesso.
-        }
-    } catch (erro) {
-        alert("Falha no login: " + erro.message);
-        throw erro; // IMPORTANTE: Lança o erro para o login.js saber que falhou
+    if (resposta.token) {
+        localStorage.setItem("token", resposta.token);
+
+        const role = resposta.userRole || (resposta.user && resposta.user.role) || "CLIENT";
+        localStorage.setItem("userRole", role);
+
+        const userObj = { role: role.toLowerCase() };
+        localStorage.setItem("user", JSON.stringify(userObj));
     }
-}
-
-async function obterIngredientes() {
-    const token = localStorage.getItem("token");
-
-    try {
-        const response = await fetch(`${BASE_URL}/ingredients`, {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${token}`, // Envio do JWT
-                "Content-Type": "application/json"
-            }
-        });
-
-        if (!response.ok) throw new Error("Não foi possível carregar os ingredientes.");
-
-        const ingredientes = await response.json();
-        return ingredientes;
-    } catch (erro) {
-        console.error(erro);
-    }
+    // Lança erro se falhar — o login.js trata do redirecionamento
 }
