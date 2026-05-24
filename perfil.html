@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>O Meu Perfil - Café Santuário</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
 
     <header class="main-header">
-        <a href="index.html" class="logo" style="text-decoration: none;">Café Santuário</a>
-        <ul class="main-nav" id="main-navbar"></ul>
+        <a href="index.html" class="logo">Café Santuário</a>
+        <nav class="main-nav" id="main-navbar"></nav>
         <div class="header-icons"></div>
     </header>
 
@@ -20,15 +20,23 @@
             <div class="perfil-avatar">
                 <i class="fa-solid fa-circle-user"></i>
             </div>
-            <h2 id="perfil-username" class="perfil-titulo">A carregar...</h2>
-            <span id="role-badge" class="perfil-badge">A carregar...</span>
+            <h2 id="perfil-username" class="perfil-titulo">Carregando...</h2>
+            <span id="role-badge" class="perfil-badge">CLIENT</span>
         </div>
 
         <div class="perfil-corpo">
             <div class="info-group">
+                <div class="info-icon"><i class="fa-solid fa-wallet"></i></div>
+                <div class="info-detalhes">
+                    <p class="info-label">Saldo Disponível</p>
+                    <p id="perfil-balance" class="info-valor" style="font-size: 24px; color: #2d6a4f; font-weight: 700;">0.00 €</p>
+                </div>
+            </div>
+
+            <div class="info-group">
                 <div class="info-icon"><i class="fa-solid fa-id-card"></i></div>
                 <div class="info-detalhes">
-                    <p class="info-label">Cargo na Base de Dados</p>
+                    <p class="info-label">Cargo</p>
                     <p id="info-role-detalhado" class="info-valor">-</p>
                 </div>
             </div>
@@ -36,17 +44,16 @@
             <div class="info-group">
                 <div class="info-icon"><i class="fa-solid fa-shield-halved"></i></div>
                 <div class="info-detalhes">
-                    <p class="info-label">Estado da Ligação</p>
+                    <p class="info-label">Estado da Conta</p>
                     <p class="info-valor" style="color: #2ecc71; font-weight: bold;">
-                        <i class="fa-solid fa-circle-check"></i> Sessão Autenticada
+                        <i class="fa-solid fa-circle-check"></i> Ativa
                     </p>
                 </div>
             </div>
-
-
         </div>
     </main>
 
+    <script src="api.js"></script>
     <script src="main.js"></script>
     <script src="perfil.js"></script>
 </body>

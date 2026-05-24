@@ -1,54 +1,54 @@
 // perfil.js
 
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. Vai buscar as credenciais guardadas no localStorage
-    const storedToken = localStorage.getItem('token');
-    const storedRole = localStorage.getItem('userRole') || 'CLIENT';
-    const userObjString = localStorage.getItem('user');
-    
-    // Proteção de Rota: Se não houver token, expulsa para o login
-    if (!storedToken) {
+document.addEventListener('DOMContentLoaded', async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
         alert("Precisa de iniciar sessão para aceder ao perfil!");
         window.location.href = 'login.html';
         return;
     }
 
-    // 2. Tenta descobrir o username guardado pelo login
-    let usernameExibir = "Utilizador";
-    if (userObjString) {
-        try {
-            const userObj = JSON.parse(userObjString);
-            if (userObj.username) {
-                usernameExibir = userObj.username;
-            } else if (userObj.name) {
-                usernameExibir = userObj.name;
-            }
-        } catch(e) {
-            console.error("Erro ao ler o objeto de utilizador:", e);
+    // Tenta obter dados do utilizador
+    let username = "Utilizador";
+    let balance = 0;
+    let role = localStorage.getItem('userRole') || 'CLIENT';
+
+    try {
+        // Tenta buscar dados atualizados do utilizador (se o endpoint existir)
+        const userData = await getData('/users/me'); // ou /auth/me, dependendo da tua API
+        if (userData) {
+            username = userData.username || username;
+            balance = userData.balance || 0;
+            role = userData.type || role;
         }
-    }
-    // Fallback: tenta buscar o username diretamente do localStorage
-    if (usernameExibir === "Utilizador") {
-        const directUsername = localStorage.getItem('username');
-        if (directUsername) usernameExibir = directUsername;
+    } catch (e) {
+        // Fallback: usa dados do localStorage
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            try {
+                const u = JSON.parse(storedUser);
+                username = u.username || username;
+            } catch {}
+        }
+        // Tenta pegar balance do localStorage (caso tenha sido guardado)
+        balance = localStorage.getItem('userBalance') ? parseFloat(localStorage.getItem('userBalance')) : 0;
     }
 
-    // 3. Aplica os dados nos elementos do HTML
-    document.getElementById('perfil-username').textContent = usernameExibir;
+    // Atualiza o DOM
+    document.getElementById('perfil-username').textContent = username;
     
     const badge = document.getElementById('role-badge');
-    const roleDetalhe = document.getElementById('info-role-detalhado');
+    badge.textContent = role;
     
-    badge.textContent = storedRole;
-    roleDetalhe.textContent = `Utilizador com permissões de ${storedRole}`;
+    if (role === 'ADMIN') badge.style.backgroundColor = '#fee2e2';
+    else if (role === 'EMPLOYEE') badge.style.backgroundColor = '#dbeafe';
+    else badge.style.backgroundColor = '#e0f2fe';
 
-    // 4. Aplica as classes dinâmicas de estilo baseando-se no teu CSS
-    if (storedRole === 'ADMIN') {
-        badge.className = 'perfil-badge badge-admin';
-    } else if (storedRole === 'EMPLOYEE') {
-        badge.className = 'perfil-badge badge-employee';
-    } else {
-        badge.className = 'perfil-badge badge-client';
-    }
-
+    // Mostra o saldo
+    const balanceEl = document.getElementById('perfil-balance');
+    balanceEl.textContent = parseFloat(balance).toFixed(2) + " €";
+    
+    document.getElementById('info-role-detalhado').textContent = 
+        role === 'ADMIN' ? 'Administrador' : 
+        role === 'EMPLOYEE' ? 'Funcionário' : 'Cliente';
 });

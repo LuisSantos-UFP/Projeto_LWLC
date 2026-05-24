@@ -574,7 +574,6 @@ async function apagarMenu(id, dataDisplay) {
 function templateIngredientes() {
     return `
     <div class="ingredientes-wrapper">
-
         <div class="ingredientes-page-header">
             <div>
                 <h1>🧂 Gestão de Ingredientes</h1>
@@ -591,10 +590,9 @@ function templateIngredientes() {
                 A carregar ingredientes...
             </div>
         </div>
-
     </div>
 
-    <!-- MODAL CRIAR / EDITAR INGREDIENTE -->
+    <!-- MODAL -->
     <div class="modal-overlay" id="modal-ingrediente">
         <div class="modal-box">
             <div class="modal-header">
@@ -604,17 +602,45 @@ function templateIngredientes() {
 
             <div class="form-group">
                 <label>Nome do Ingrediente *</label>
-                <input type="text" id="input-nome-ing" placeholder="Ex: Cogumelos Shiitake" maxlength="100">
+                <input type="text" id="input-nome-ing" placeholder="Ex: Manteiga" maxlength="100">
             </div>
 
             <div class="form-group">
                 <label>Tipo *</label>
                 <select id="input-tipo-ing">
                     <option value="">-- Selecionar tipo --</option>
+                    <option value="DAIRY_PRODUCTS">🥛 Laticínios</option>
+                    <option value="VEGETABLES">🥕 Vegetais</option>
+                    <option value="FRUIT">🍎 Fruta</option>
+                    <option value="TUBERS">🥔 Tubérculos</option>
+                    <option value="CEREALS_AND_DERIVATIVES">🌾 Cereais</option>
                     <option value="MEAT">🥩 Carne</option>
+                    <option value="FATS_AND_OILS">🛢️ Gorduras e Óleos</option>
+                    <option value="LEGUMES">🫘 Leguminosas</option>
                     <option value="FISH">🐟 Peixe</option>
-                    <option value="VEGETARIAN">🥗 Vegetariano</option>
-                    <option value="OTHER">📦 Outro</option>
+                    <option value="EGGS">🥚 Ovos</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Alergénio (Allergen) *</label>
+                <select id="input-allergen">
+                    <option value="">-- Selecionar Alergénio --</option>
+                    <option value="NONE">Nenhum</option>
+                    <option value="MILK_AND_MILK_PRODUCTS">🥛 Leite e Derivados</option>
+                    <option value="GLUTEN_CONTAINING_CEREALS">🌾 Glúten</option>
+                    <option value="EGGS">🥚 Ovos</option>
+                    <option value="NUTS">🥜 Frutos Secos</option>
+                    <option value="FISH">🐟 Peixe</option>
+                    <option value="CRUSTACEANS">🦐 Crustáceos</option>
+                    <option value="SOYBEANS">🌱 Soja</option>
+                    <option value="CELERY">🥬 Aipo</option>
+                    <option value="MUSTARD">🌭 Mostarda</option>
+                    <option value="SESAME_SEEDS">🥯 Sementes de Sésamo</option>
+                    <option value="SULPHITES">🧪 Sulfitos</option>
+                    <option value="LUPINS">🌿 Tremoços</option>
+                    <option value="MOLLUSCS">🐚 Moluscos</option>
+                    <option value="PEANUTS">🥜 Amendoim</option>
                 </select>
             </div>
 
@@ -705,25 +731,30 @@ async function editarIngrediente(id) {
 async function guardarIngrediente() {
     const nome = document.getElementById('input-nome-ing').value.trim();
     const tipo = document.getElementById('input-tipo-ing').value;
+    const allergen = document.getElementById('input-allergen').value;
 
-    if (!nome) { mostrarToast('O nome do ingrediente é obrigatório.', 'error'); return; }
-    if (!/^[a-zA-ZÀ-ÿ\s]+$/.test(nome)) { mostrarToast('O nome só pode conter letras e espaços.', 'error'); return; }
-    if (!tipo) { mostrarToast('Seleciona o tipo do ingrediente.', 'error'); return; }
+    if (!nome) { mostrarToast('Nome do ingrediente é obrigatório.', 'error'); return; }
+    if (!tipo) { mostrarToast('Tipo é obrigatório.', 'error'); return; }
+    if (!allergen) { mostrarToast('Alergénio é obrigatório.', 'error'); return; }
 
-    const dados = { name: nome, type: tipo };
+    const dados = { 
+        name: nome, 
+        type: tipo,
+        allergen: allergen 
+    };
 
     try {
         if (idEmEdicao) {
             await putData(`/ingredients/${idEmEdicao}`, dados);
-            mostrarToast('Ingrediente atualizado com sucesso!');
+            mostrarToast('Ingrediente atualizado!', 'success');
         } else {
             await postData('/ingredients', dados);
-            mostrarToast('Ingrediente criado com sucesso!');
+            mostrarToast('Ingrediente criado com sucesso!', 'success');
         }
         fecharModalIngrediente();
         carregarIngredientes();
     } catch (e) {
-        mostrarToast('Erro ao guardar ingrediente: ' + e.message, 'error');
+        mostrarToast('Erro: ' + (e.message || e), 'error');
     }
 }
 
