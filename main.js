@@ -2,8 +2,8 @@
 
 // === MODO DE DESENVOLVIMENTO (FORÇAR ADMIN) ===
 // Apaga ou comenta estas duas linhas quando fores entregar o projeto!
-localStorage.setItem("userRole", "ADMIN");
-localStorage.setItem("user", JSON.stringify({ role: "admin" }));
+//localStorage.setItem("userRole", "ADMIN");
+//localStorage.setItem("user", JSON.stringify({ role: "admin" }));
 // ===============================================
 
 const token = localStorage.getItem("token");
@@ -64,7 +64,6 @@ function renderNavbar() {
     } else if (currentUser.role === 'employee' || storedRole === "EMPLOYEE") {
         navLinks += `
             <li><a href="gestao.html" class="nav-link nav-emp">Gestão</a></li>
-            <li><a href="employee-dashboard.html" class="nav-link nav-emp">Pedidos</a></li>
         `;
     } else if (currentUser.role === 'client' || storedRole === "CLIENT") {
         navLinks += ``;

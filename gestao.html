@@ -20,43 +20,43 @@
             </div>
             
             <ul class="nav-menu">
-                <li class="nav-item">
+                <li class="nav-item" data-role="admin">
                     <a href="#" class="nav-link active" onclick="carregarSecao('painel', this)">
                         <svg class="svg-icon" viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
                         Painel Geral
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" data-role="employee admin">
                     <a href="#" class="nav-link" onclick="carregarSecao('ingredientes', this)">
                         <svg class="svg-icon" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
                         Gestão de Ingredientes
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" data-role="employee admin">
                     <a href="#" class="nav-link" onclick="carregarSecao('pratos', this)">
                         <svg class="svg-icon" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
                         Gestão de Pratos
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" data-role="employee admin">
                     <a href="#" class="nav-link" onclick="carregarSecao('menus', this)">
                         <svg class="svg-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 14H4v-4h11v4zm0-5H4V9h11v4zm5 5h-4V9h4v9z"/></svg>
                         Gestão de Menus
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" data-role="admin">
                     <a href="#" class="nav-link" onclick="carregarSecao('compras', this)">
-                    <svg class="svg-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 14H4v-4h11v4zm0-5H4V9h11v4zm5 5h-4V9h4v9z"/></svg>
+                        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 14H4v-4h11v4zm0-5H4V9h11v4zm5 5h-4V9h4v9z"/></svg>
                         Gestão de Compras
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" data-role="admin">
                     <a href="#" class="nav-link" onclick="carregarSecao('utilizadores')">
                         <svg class="svg-icon" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 1.34 5 8s1.34 3 8 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-                        utilizadores
+                        Utilizadores
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" data-role="admin">
                     <a href="#" class="nav-link">
                         <svg class="svg-icon" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
                         Definições
@@ -90,7 +90,7 @@
                     <header class="header-container">
                         <div class="header-title-cell">
                             <h1 class="page-title">Painel Geral</h1>
-                            <p class="page-subtitle">Bem-vinda de volta. Eis o que está a acontecer no Café Santuário hoje.</p>
+                            <p class="page-subtitle">Bem-vindo de volta. Eis o que está a acontecer no Café Santuário hoje.</p>
                         </div>
                         <div class="header-action-cell">
                             <div class="date-badge" id="dashboard-current-date-badge">
@@ -101,7 +101,6 @@
                     </header>
         
                     <section class="metrics-row">
-                        
                         <div class="metric-card-cell" id="kpi-card-reservas">
                             <div class="card-header-row">
                                 <div class="card-icon-cell">
@@ -121,7 +120,7 @@
                             <div class="card-header-row">
                                 <div class="card-icon-cell">
                                     <div class="card-icon-wrapper">
-                                        <svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5 Back .67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+                                        <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
                                     </div>
                                 </div>
                                 <div class="card-badge-cell">
@@ -146,23 +145,14 @@
                             <div class="metric-label">Equipa Ativa</div>
                             <div class="metric-value" id="api-metric-equipa-count">--</div>
                         </div>
-        
                     </section>
         
                     <div class="content-row">
-                        
                         <div class="chart-cell" id="section-container-vendas-grafico">
                             <div class="section-card-title-row">
                                 <h2 class="section-card-title">Vendas Semanais</h2>
-                                <div class="section-card-action">
-                                    <button class="btn-action-trigger">
-                                        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
-                                    </button>
-                                </div>
                             </div>
-                            
                             <div class="chart-container-placeholder" id="api-chart-canvas-wrapper"></div>
-        
                             <div class="chart-metrics-summary">
                                 <div class="summary-inline-item">
                                     <div class="summary-inline-label">Ticket Médio</div>
@@ -185,7 +175,6 @@
                                     <button class="btn-invite-member" id="action-trigger-convidar-membro">+ Convidar Membro</button>
                                 </div>
                             </div>
-        
                             <div class="data-table-wrapper">
                                 <table class="custom-dashboard-table">
                                     <thead>
@@ -200,23 +189,7 @@
                                 </table>
                             </div>
                         </div>
-        
                     </div>
-        
-                    <section class="system-config-container" id="section-container-config-sistema">
-                        <div class="config-icon-cell">
-                            <div class="card-icon-wrapper" style="margin-top: 0;">
-                                <svg viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l-.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l-.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
-                            </div>
-                        </div>
-                        <div class="config-text-cell">
-                            <h3 style="font-size: 15px; font-weight: 700; color: var(--primary-green);">Configurações do Sistema</h3>
-                            <p class="page-subtitle" style="font-size: 12px; margin-top: 2px;">Atualize as suas preferências globais do site, taxas de IVA e zonas de entrega.</p>
-                        </div>
-                        <div class="config-btn-cell">
-                            <button class="btn-global-config" id="action-trigger-definicoes-globais">Abrir Definições Globais</button>
-                        </div>
-                    </section>
         
                     <footer class="footer-credits-container">
                         <div class="footer-copy-cell">
@@ -230,29 +203,6 @@
                     </footer>
         
                 </main>
-        
-                
-            
-                <script>
-                    function updateDashboardDate() {
-                        const today = new Date();
-                        const options = { day: 'numeric', month: 'long', year: 'numeric' };
-                        const formattedDate = today.toLocaleDateString('pt-PT', options);
-                        
-                        const dateContainer = document.getElementById('live-date-string-container');
-                        if (dateContainer) {
-                            dateContainer.textContent = formattedDate;
-                        }
-                        
-                        const yearContainer = document.getElementById('current-footer-year-display');
-                        if (yearContainer) {
-                            yearContainer.textContent = today.getFullYear();
-                        }
-                    }
-                    document.addEventListener('DOMContentLoaded', updateDashboardDate);
-                </script>
-
-
             </div>
 
         </main>
@@ -260,6 +210,39 @@
     <script src="api.js"></script>
     <script src="main.js"></script>
     <script src="gestao.js"></script>
+
+    <script>
+        // Aplica visibilidade dos itens do menu consoante o role
+        document.addEventListener('DOMContentLoaded', () => {
+            const role = (localStorage.getItem('userRole') || '').toLowerCase();
+
+            document.querySelectorAll('.nav-item[data-role]').forEach(item => {
+                const rolesPermitidos = item.getAttribute('data-role').split(' ');
+                if (!rolesPermitidos.includes(role)) {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Se for employee, abre logo em Ingredientes (primeiro item visível)
+            if (role === 'employee') {
+                const primeiroLink = document.querySelector('.nav-item[data-role*="employee"] .nav-link');
+                if (primeiroLink) {
+                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                    primeiroLink.classList.add('active');
+                    carregarSecao('ingredientes', primeiroLink);
+                }
+            }
+
+            // Data no painel
+            const dateContainer = document.getElementById('live-date-string-container');
+            if (dateContainer) {
+                const hoje = new Date();
+                dateContainer.textContent = hoje.toLocaleDateString('pt-PT', { day: 'numeric', month: 'long', year: 'numeric' });
+            }
+            const yearContainer = document.getElementById('current-footer-year-display');
+            if (yearContainer) yearContainer.textContent = new Date().getFullYear();
+        });
+    </script>
 
 </body>
 </html>

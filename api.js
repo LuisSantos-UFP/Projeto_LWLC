@@ -94,11 +94,14 @@ async function loginUtilizador(username, password) {
     if (resposta.token) {
         localStorage.setItem("token", resposta.token);
 
-        const role = resposta.userRole || (resposta.user && resposta.user.role) || "CLIENT";
-        localStorage.setItem("userRole", role);
+            const role = resposta.userRole || resposta.role || resposta.type || 
+             (resposta.user && resposta.user.role) || 
+             (resposta.user && resposta.user.type) || "CLIENT";       
+              localStorage.setItem("userRole", role);
 
         const userObj = { role: role.toLowerCase() };
         localStorage.setItem("user", JSON.stringify(userObj));
     }
     // Lança erro se falhar — o login.js trata do redirecionamento
+    console.log("Resposta completa da API:", JSON.stringify(resposta));
 }
