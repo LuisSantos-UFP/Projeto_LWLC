@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Menu | Café Santuário</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Fontes -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lato:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- --------- HEADER --------- -->
+
+        <header class="main-header">
+
+            <div class="logo">
+                <a href="index.html" style="color: inherit; text-decoration: none;">Café Santuário</a>
+            </div>
+        <nav class="main-nav">
+            <a href="index.html" class="nav-link">Início</a>
+            <a href="menu.html" class="nav-link active">Menu</a>
+            <a href="reservas.html" class="nav-link">Reservas</a>
+        </nav>
+
+        <div class="header-icons">
+
+            <button class="icon-btn">
+                <i class="fa-solid fa-cart-shopping"></i>
+            </button>
+
+            <button class="icon-btn">
+                <a href="login.html" class="icon-btn" title="Perfil">
+                    <i class="fa-solid fa-user"></i>
+                </a>            
+            </button>
+
+        </div>
+
+    </header>
+
+    <!-- --------- HERO --------- -->
+    <section class="menu-hero">
+
+        <div class="menu-hero-content">
+
+            <span class="menu-badge">
+                ☕ CAFÉ SANTUÁRIO
+            </span>
+
+            <h1>
+                O Nosso Menu
+            </h1>
+
+            <p>
+                Descubra sabores artesanais preparados diariamente com ingredientes frescos e locais.
+            </p>
+
+        </div>
+
+    </section>
+
+    <!-- --------- MENU CONTAINER --------- -->
+    <main class="menu-container">
+
+        <aside class="menu-sidebar">
+
+            <h3>Categorias</h3>
+
+            <div class="category-list">
+
+                <button class="category-btn active">Todos</button>
+                <button class="category-btn">Carne</button>
+                <button class="category-btn">Peixe</button>
+                <button class="category-btn">Vegetariano</button>
+                <button class="category-btn">Menus</button>
+
+            </div>
+
+        </aside>
+
+        <section class="menu-content">
+            <div id="menu-products-grid" class="menu-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:24px; width:100%;">
+                <p style="color:#666; font-size:16px; padding:20px;">A carregar os nossos melhores sabores...</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- --------- FOOTER --------- -->
+    <footer class="site-footer">
+
+        <div class="footer-grid">
+
+            <div class="footer-brand">
+
+                <div class="footer-logo">
+                    Café Santuário
+                </div>
+
+                <p class="footer-tagline">
+                    Criamos momentos de paz e sabor no coração da cidade desde 2021.
+                </p>
+
+            </div>
+
+            <div class="footer-col">
+
+                <h4>EXPLORAR</h4>
+
+                <a href="#">Contacte-nos</a>
+                <a href="#">Horário</a>
+
+            </div>
+
+            <div class="footer-col">
+
+                <h4>LEGAL</h4>
+
+                <a href="#">Política de Privacidade</a>
+                <a href="#">Termos de Serviço</a>
+
+            </div>
+
+            <div class="footer-copy">
+                © 2024 Café Santuário. Todos os direitos reservados.
+            </div>
+
+        </div>
+
+    </footer>
+
+    <script src="api.js"></script>
+    <script src="login.js"></script>
+    <script src="main.js"></script>
+    <script src="menu.js"></script>
+ </body>
+</html>
