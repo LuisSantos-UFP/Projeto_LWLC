@@ -72,54 +72,45 @@
     <!-- --------- MENU CONTAINER --------- -->
     <main class="menu-container">
 
-        <!-- SIDEBAR -->
         <aside class="menu-sidebar">
 
             <h3>Categorias</h3>
 
             <div class="category-list">
-
-                <button class="category-btn active">
+                <button class="category-btn active" data-category="todos">
                     Todos
                 </button>
 
-                <button class="category-btn">
+                <button class="category-btn" data-category="cafes">
                     Cafés
                 </button>
 
-                <button class="category-btn">
+                <button class="category-btn" data-category="pastelaria">
                     Pastelaria
                 </button>
 
-                <button class="category-btn">
+                <button class="category-btn" data-category="pequeno-almoco">
                     Pequeno-Almoço
                 </button>
 
-                <button class="category-btn">
+                <button class="category-btn" data-category="bebidas">
                     Bebidas
                 </button>
-
             </div>
 
         </aside>
 
-        <!-- CONTENT -->
         <section class="menu-content">
 
-            <!-- FUTURO BACKEND -->
-            <div class="menu-placeholder">
-
-                <div class="placeholder-icon">
-                    <i class="fa-solid fa-utensils"></i>
+            <div id="menu-products-grid" class="products-grid">
+                
+                <div class="menu-placeholder">
+                    <div class="placeholder-icon">
+                        <i class="fa-solid fa-spinner fa-spin"></i>
+                    </div>
+                    <h2>A carregar o menu...</h2>
+                    <p>Estamos a preparar os nossos melhores sabores para si.</p>
                 </div>
-
-                <h2>
-                    Sistema de Menu em Desenvolvimento
-                </h2>
-
-                <p>
-                    Aqui será carregado o menu dinamicamente através do backend.
-                </p>
 
             </div>
 

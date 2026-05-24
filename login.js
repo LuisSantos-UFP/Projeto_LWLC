@@ -35,8 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
 const passwordInput = document.getElementById('password');
 const togglePasswordIcon = document.getElementById('togglePassword');
 
-// Adicionar o evento de clique no ícone do olho
-togglePasswordIcon.addEventListener('click', function () {
+// Só executa se os elementos existirem (apenas na página login.html)
+if (togglePasswordIcon) togglePasswordIcon.addEventListener('click', function () {
     // Verificar o tipo atual do input
     const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
     

@@ -64,6 +64,14 @@ function carregarSecao(nome, linkClicado) {
             area.innerHTML = templateIngredientes();
             carregarIngredientes();
             break;
+        case 'compras':
+            area.innerHTML = templateCompras();
+            carregarCompras();
+            break;
+        case 'utilizadores':
+            area.innerHTML = templateUtilizadores();
+            carregarUtilizadores();
+            break;
         case 'painel':
             area.innerHTML = painelGeral_HTML;
             // Re-executa o script da data que estava no gestao.html
@@ -727,5 +735,409 @@ async function apagarIngrediente(id, nome) {
         carregarIngredientes();
     } catch (e) {
         mostrarToast('Não foi possível apagar. O ingrediente pode estar a ser usado num prato.', 'error');
+    }
+}
+
+
+// ════════════════════════════════════════════════════════════
+// SECÇÃO: COMPRAS
+// ════════════════════════════════════════════════════════════
+
+function templateCompras() {
+    return `
+    <div class="section-wrapper">
+
+        <div class="section-page-header">
+            <div>
+                <h1>🛒 Gestão de Compras</h1>
+                <p>Registe e consulte as compras dos clientes.</p>
+            </div>
+            <button class="btn-new" onclick="abrirModalCompra()">
+                <i class="fa-solid fa-plus"></i> Nova Compra
+            </button>
+        </div>
+
+        <!-- FILTROS -->
+        <div style="display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap;">
+            <input type="date" id="filtro-data-compra" style="padding:10px 14px;border:1.5px solid #e0e0e0;border-radius:10px;font-size:14px;font-family:inherit;">
+            <input type="text" id="filtro-cliente-compra" placeholder="Filtrar por cliente..." style="padding:10px 14px;border:1.5px solid #e0e0e0;border-radius:10px;font-size:14px;font-family:inherit;flex:1;min-width:180px;">
+            <button onclick="aplicarFiltros()" style="padding:10px 20px;background:#2d6a4f;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;">
+                <i class="fa-solid fa-filter"></i> Filtrar
+            </button>
+            <button onclick="carregarCompras()" style="padding:10px 20px;background:#f0f0f0;color:#555;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;">
+                <i class="fa-solid fa-rotate"></i> Limpar
+            </button>
+        </div>
+
+        <div id="compras-table-wrapper">
+            <div class="section-loading">
+                <i class="fa-solid fa-spinner fa-spin" style="font-size:36px;margin-bottom:12px;display:block;"></i>
+                A carregar compras...
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MODAL CRIAR COMPRA -->
+    <div class="modal-overlay" id="modal-compra">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h2 id="modal-compra-titulo">Nova Compra</h2>
+                <button class="btn-modal-close" onclick="fecharModalCompra()">✕</button>
+            </div>
+
+            <div class="form-group">
+                <label>👤 Username do Cliente *</label>
+                <input type="text" id="input-cliente-compra" placeholder="Ex: mary_client">
+            </div>
+
+            <div class="form-group">
+                <label>🍽️ Prato *</label>
+                <select id="select-prato-compra">
+                    <option value="">— Selecionar prato —</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>📅 Data *</label>
+                <input type="date" id="input-data-compra">
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-cancelar" onclick="fecharModalCompra()">Cancelar</button>
+                <button class="btn-guardar" onclick="guardarCompra()">
+                    <i class="fa-solid fa-floppy-disk"></i> Registar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+    `;
+}
+
+async function carregarCompras() {
+    const wrapper = document.getElementById('compras-table-wrapper');
+    if (!wrapper) return;
+    wrapper.innerHTML = `<div class="section-loading"><i class="fa-solid fa-spinner fa-spin" style="font-size:36px;margin-bottom:12px;display:block;"></i>A carregar compras...</div>`;
+    try {
+        const compras = await getData('/purchases');
+        renderizarCompras(compras);
+    } catch (e) {
+        wrapper.innerHTML = `<div class="section-empty"><i class="fa-solid fa-triangle-exclamation"></i><p>Erro ao carregar compras.</p></div>`;
+    }
+}
+
+function renderizarCompras(compras) {
+    const wrapper = document.getElementById('compras-table-wrapper');
+    if (!compras || compras.length === 0) {
+        wrapper.innerHTML = `<div class="section-empty"><i class="fa-solid fa-cart-shopping"></i><p>Ainda não há compras registadas.</p></div>`;
+        return;
+    }
+
+    wrapper.innerHTML = `
+        <table style="width:100%;border-collapse:collapse;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+            <thead>
+                <tr style="background:#2d6a4f;color:#fff;">
+                    <th style="padding:14px 20px;text-align:left;font-size:13px;font-weight:700;">Cliente</th>
+                    <th style="padding:14px 20px;text-align:left;font-size:13px;font-weight:700;">Prato</th>
+                    <th style="padding:14px 20px;text-align:left;font-size:13px;font-weight:700;">Data</th>
+                    <th style="padding:14px 20px;text-align:right;font-size:13px;font-weight:700;">Ação</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${compras.map((c, i) => `
+                <tr style="border-bottom:1px solid #f0f0f0;${i % 2 === 0 ? '' : 'background:#fafafa;'}">
+                    <td style="padding:12px 20px;font-size:14px;font-weight:600;">
+                        <i class="fa-solid fa-user" style="color:#2d6a4f;margin-right:8px;"></i>${c.clientUsername}
+                    </td>
+                    <td style="padding:12px 20px;font-size:14px;">🍽️ ${c.dishName}</td>
+                    <td style="padding:12px 20px;font-size:14px;color:#888;">${formatarDataCompleta(c.date).display}</td>
+                    <td style="padding:12px 20px;text-align:right;">
+                        <button onclick="apagarCompra('${c.id}', '${c.clientUsername}')"
+                            style="background:#fdecea;color:#c0392b;border:none;border-radius:8px;padding:6px 12px;font-size:13px;font-weight:600;cursor:pointer;">
+                            🗑️ Apagar
+                        </button>
+                    </td>
+                </tr>`).join('')}
+            </tbody>
+        </table>`;
+}
+
+async function aplicarFiltros() {
+    const data = document.getElementById('filtro-data-compra')?.value;
+    const cliente = document.getElementById('filtro-cliente-compra')?.value.trim();
+
+    const wrapper = document.getElementById('compras-table-wrapper');
+    wrapper.innerHTML = `<div class="section-loading"><i class="fa-solid fa-spinner fa-spin" style="font-size:36px;margin-bottom:12px;display:block;"></i>A filtrar...</div>`;
+
+    try {
+        let compras;
+        if (data) {
+            compras = await getData(`/purchases/date/${data}`);
+        } else if (cliente) {
+            compras = await getData(`/purchases/by-client/${cliente}`);
+        } else {
+            compras = await getData('/purchases');
+        }
+        renderizarCompras(compras);
+    } catch (e) {
+        wrapper.innerHTML = `<div class="section-empty"><i class="fa-solid fa-triangle-exclamation"></i><p>Sem resultados para os filtros aplicados.</p></div>`;
+    }
+}
+
+async function abrirModalCompra() {
+    idEmEdicao = null;
+    document.getElementById('modal-compra-titulo').textContent = 'Nova Compra';
+    document.getElementById('input-cliente-compra').value = '';
+    document.getElementById('input-data-compra').value = '';
+
+    // Carrega pratos para o select
+    try {
+        const pratos = await getData('/dishes');
+        const select = document.getElementById('select-prato-compra');
+        select.innerHTML = `<option value="">— Selecionar prato —</option>` +
+            pratos.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
+    } catch {
+        mostrarToast('Erro ao carregar pratos.', 'error');
+    }
+
+    document.getElementById('modal-compra').classList.add('active');
+}
+
+function fecharModalCompra() {
+    document.getElementById('modal-compra').classList.remove('active');
+}
+
+async function guardarCompra() {
+    const cliente = document.getElementById('input-cliente-compra').value.trim();
+    const prato   = document.getElementById('select-prato-compra').value;
+    const data    = document.getElementById('input-data-compra').value;
+
+    if (!cliente) { mostrarToast('O username do cliente é obrigatório.', 'error'); return; }
+    if (!prato)   { mostrarToast('Seleciona um prato.', 'error'); return; }
+    if (!data)    { mostrarToast('Seleciona uma data.', 'error'); return; }
+
+    // Validação: data futura
+    const hoje = new Date(); hoje.setHours(0, 0, 0, 0);
+    if (new Date(data + 'T00:00:00') <= hoje) {
+        mostrarToast('A data da compra tem de ser futura.', 'error'); return;
+    }
+
+    try {
+        await postData('/purchases', {
+            clientUsername: cliente,
+            dishName: prato,
+            date: data
+        });
+        mostrarToast('Compra registada com sucesso!');
+        fecharModalCompra();
+        carregarCompras();
+    } catch (e) {
+        mostrarToast('Erro ao registar compra: ' + e.message, 'error');
+    }
+}
+
+async function apagarCompra(id, cliente) {
+    if (!confirm(`Tens a certeza que queres apagar a compra de "${cliente}"?`)) return;
+    try {
+        await deleteData(`/purchases/${id}`);
+        mostrarToast('Compra apagada com sucesso!');
+        carregarCompras();
+    } catch (e) {
+        mostrarToast('Erro ao apagar compra.', 'error');
+    }
+}
+
+
+// ════════════════════════════════════════════════════════════
+// SECÇÃO: UTILIZADORES (RF1 + RF3 + RF8)
+// ════════════════════════════════════════════════════════════
+
+function templateUtilizadores() {
+    return `
+    <div class="section-wrapper">
+        <div class="section-page-header">
+            <div>
+                <h1>👥 Gestão de Utilizadores</h1>
+                <p>Crie e gira as contas de utilizador do sistema.</p>
+            </div>
+            <button class="btn-new" onclick="abrirModalUtilizador()">
+                <i class="fa-solid fa-user-plus"></i> Novo Utilizador
+            </button>
+        </div>
+
+        <div id="utilizadores-grid" class="dishes-grid">
+            <div class="section-loading">
+                <i class="fa-solid fa-spinner fa-spin" style="font-size:36px;margin-bottom:12px;display:block;"></i>
+                A carregar utilizadores...
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL UTILIZADOR -->
+    <div class="modal-overlay" id="modal-utilizador">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h2 id="modal-utilizador-titulo">Novo Utilizador</h2>
+                <button class="btn-modal-close" onclick="fecharModalUtilizador()">✕</button>
+            </div>
+
+            <div class="form-group">
+                <label>Username *</label>
+                <input type="text" id="input-username" placeholder="Ex: joao_silva">
+            </div>
+
+            <div class="form-group">
+                <label>Password *</label>
+                <input type="password" id="input-password-user" placeholder="Mín. 6 caracteres, 1 maiúscula">
+                <small style="color:#aaa;font-size:11px;margin-top:4px;display:block;">
+                    Deve conter pelo menos uma letra maiúscula
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label>Tipo *</label>
+                <select id="input-tipo-user">
+                    <option value="CLIENT">Cliente</option>
+                    <option value="EMPLOYEE">Funcionário</option>
+                    <option value="ADMIN">Administrador</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Saldo inicial (€)</label>
+                <input type="number" id="input-balance-user" placeholder="0" min="0" step="0.01" value="0">
+            </div>
+
+            <input type="hidden" id="input-id-user">
+
+            <div class="modal-actions">
+                <button class="btn-cancelar" onclick="fecharModalUtilizador()">Cancelar</button>
+                <button class="btn-guardar" onclick="guardarUtilizador()">
+                    <i class="fa-solid fa-floppy-disk"></i> Guardar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+    `;
+}
+
+async function carregarUtilizadores() {
+    const grid = document.getElementById('utilizadores-grid');
+    if (!grid) return;
+    try {
+        const users = await getData('/users');
+        if (!users || users.length === 0) {
+            grid.innerHTML = `<div class="section-empty"><i class="fa-solid fa-users"></i><p>Nenhum utilizador encontrado.</p></div>`;
+            return;
+        }
+
+        const tipoLabel = { ADMIN: '👑 Admin', EMPLOYEE: '💼 Funcionário', CLIENT: '👤 Cliente' };
+        const tipoColor = { ADMIN: '#c0392b', EMPLOYEE: '#1565c0', CLIENT: '#2d6a4f' };
+
+        grid.innerHTML = users.map(u => `
+            <div style="background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,0.08);padding:20px;display:flex;flex-direction:column;gap:10px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;">
+                    <div style="font-weight:800;font-size:16px;color:#1a1a1a;">
+                        <i class="fa-solid fa-circle-user" style="color:#2d6a4f;margin-right:8px;"></i>${u.username}
+                    </div>
+                    <span style="background:${tipoColor[u.type] || '#888'}22;color:${tipoColor[u.type] || '#888'};
+                        border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;">
+                        ${tipoLabel[u.type] || u.type}
+                    </span>
+                </div>
+                ${u.balance !== undefined ? `<div style="font-size:13px;color:#777;">💰 Saldo: <strong>${parseFloat(u.balance||0).toFixed(2)} €</strong></div>` : ''}
+                <div style="display:flex;gap:8px;">
+                    <button onclick='editarUtilizador(${JSON.stringify(JSON.stringify(u))})' 
+                        style="flex:1;padding:8px;background:#e8f5e9;color:#2d6a4f;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;">
+                        ✏️ Editar
+                    </button>
+                    <button onclick="apagarUtilizador('${u.id}', '${u.username}')"
+                        style="flex:1;padding:8px;background:#fdecea;color:#c0392b;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;">
+                        🗑️ Apagar
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    } catch (e) {
+        grid.innerHTML = `<div class="section-empty"><i class="fa-solid fa-triangle-exclamation"></i><p>Erro ao carregar utilizadores.</p></div>`;
+    }
+}
+
+function abrirModalUtilizador() {
+    idEmEdicao = null;
+    document.getElementById('modal-utilizador-titulo').textContent = 'Novo Utilizador';
+    document.getElementById('input-username').value = '';
+    document.getElementById('input-password-user').value = '';
+    document.getElementById('input-tipo-user').value = 'CLIENT';
+    document.getElementById('input-balance-user').value = '0';
+    document.getElementById('input-id-user').value = '';
+    document.getElementById('input-username').disabled = false;
+    document.getElementById('modal-utilizador').classList.add('active');
+}
+
+function editarUtilizador(userJson) {
+    const u = JSON.parse(userJson);
+    idEmEdicao = u.id;
+    document.getElementById('modal-utilizador-titulo').textContent = 'Editar Utilizador';
+    document.getElementById('input-username').value = u.username || '';
+    document.getElementById('input-username').disabled = true; // username não editável
+    document.getElementById('input-password-user').value = '';
+    document.getElementById('input-tipo-user').value = u.type || 'CLIENT';
+    document.getElementById('input-balance-user').value = u.balance || 0;
+    document.getElementById('input-id-user').value = u.id;
+    document.getElementById('modal-utilizador').classList.add('active');
+}
+
+function fecharModalUtilizador() {
+    document.getElementById('modal-utilizador').classList.remove('active');
+}
+
+async function guardarUtilizador() {
+    const username = document.getElementById('input-username').value.trim();
+    const password = document.getElementById('input-password-user').value;
+    const tipo = document.getElementById('input-tipo-user').value;
+    const balance = parseFloat(document.getElementById('input-balance-user').value) || 0;
+    const id = document.getElementById('input-id-user').value;
+
+    if (!id && !username) { mostrarToast('O username é obrigatório.', 'error'); return; }
+    if (!id && !password) { mostrarToast('A password é obrigatória.', 'error'); return; }
+    if (password && !/[A-Z]/.test(password)) { mostrarToast('A password deve ter pelo menos uma letra maiúscula.', 'error'); return; }
+    if (password && password.length < 6) { mostrarToast('A password deve ter pelo menos 6 caracteres.', 'error'); return; }
+
+    try {
+        if (id) {
+            // Editar — só envia campos que mudaram
+            const dados = { type: tipo, balance };
+            if (password) dados.password = password;
+            await putData(`/users/${id}`, dados);
+            mostrarToast('Utilizador atualizado com sucesso!');
+        } else {
+            // Criar novo
+            await postData('/users', { username, password, type: tipo, balance });
+            mostrarToast('Utilizador criado com sucesso!');
+        }
+        fecharModalUtilizador();
+        carregarUtilizadores();
+    } catch (e) {
+        if (e.message.includes('uppercase')) {
+            mostrarToast('A password deve ter pelo menos uma letra maiúscula.', 'error');
+        } else {
+            mostrarToast('Erro: ' + e.message, 'error');
+        }
+    }
+}
+
+async function apagarUtilizador(id, username) {
+    if (!confirm(`Tens a certeza que queres apagar o utilizador "${username}"?`)) return;
+    try {
+        await deleteData(`/users/${id}`);
+        mostrarToast(`Utilizador "${username}" apagado.`);
+        carregarUtilizadores();
+    } catch (e) {
+        mostrarToast('Erro ao apagar utilizador.', 'error');
     }
 }
