@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-// ── 1. Carregar dados ─────────────────────────────────────────
+// ----- 1. Carregar dados -----------------------------------------------------------------------
 async function carregarMenuDoBackend() {
     const contentSection = document.querySelector(".menu-content");
     if (!contentSection) return;
@@ -52,7 +52,7 @@ async function carregarMenuDoBackend() {
 }
 
 
-// ── 2. Aplicar filtro ─────────────────────────────────────────
+// ----- 2. Aplicar filtro -----------------------------------------------------------------------
 function aplicarFiltro(filtro) {
     filtroAtual = filtro;
     const contentSection = document.querySelector(".menu-content");
@@ -103,7 +103,7 @@ function aplicarFiltro(filtro) {
 }
 
 
-// ── 3. Renderizar menus agrupados por data ────────────────────
+// ----- 3. Renderizar menus agrupados por data --------------------------------
 function renderizarCardsDeMenu(listaDeMenus) {
     const contentSection = document.querySelector(".menu-content");
     if (!contentSection) return;
@@ -137,7 +137,7 @@ function renderizarCardsDeMenu(listaDeMenus) {
 }
 
 
-// ── 4. Criar card individual ──────────────────────────────────
+// ----- 4. Criar card individual -------------------------------------------------------------
 function criarCardHtml(nomePrato, categoriaLabel, dataMenu, icone, preco) {
     let dataFormatada = dataMenu;
     if (dataMenu && dataMenu.includes("-")) {
@@ -172,7 +172,7 @@ function criarCardHtml(nomePrato, categoriaLabel, dataMenu, icone, preco) {
 }
 
 
-// ── 5. Filtros ────────────────────────────────────────────────
+// ----- 5. Filtros --------------------------------------------------------------------------------
 function configurarFiltrosCategorias() {
     const botoesCategoria = document.querySelectorAll(".category-btn");
 
@@ -188,7 +188,7 @@ function configurarFiltrosCategorias() {
 }
 
 
-// ── 6. Carrinho ───────────────────────────────────────────────
+// ----- 6. Carrinho ------------------------------------------------------------------------------
 window.adicionarAoCarrinhoDoMenu = function(item) {
     let carrinho = localStorage.getItem("carrinho");
     carrinho = carrinho ? JSON.parse(carrinho) : [];

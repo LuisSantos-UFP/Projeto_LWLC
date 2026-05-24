@@ -206,7 +206,7 @@ window.removerDoCarrinhoUnificado = function(index) {
 function atualizarCarrinhoETransmitir() {
     let carrinho = obterCarrinhoLocalStorage();
 
-    // 1. ── Renderizar no Centro: "Os Seus Pedidos" ──
+    // 1. ----- Renderizar no Centro: "Os Seus Pedidos" -----
     const ordersContainer = document.getElementById("orders-container");
     if (ordersContainer) {
         if (carrinho.length === 0) {
@@ -237,7 +237,7 @@ function atualizarCarrinhoETransmitir() {
         }
     }
 
-    // 2. ── Renderizar no Lado: "Resumo do Pedido" (Sidebar) ──
+    // 2. ----- Renderizar no Lado: "Resumo do Pedido" (Sidebar) -----
     const summaryContainer = document.getElementById("summary-container");
     const totalEl = document.getElementById("total-price");
 

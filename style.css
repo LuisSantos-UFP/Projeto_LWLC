@@ -2511,14 +2511,14 @@ body {
    GESTAO-STYLES.CSS — Estilos das secções internas do Portal
    ================================================================ */
 
-/* ── Wrapper genérico de secção ───────────────────────────────── */
+/* ----- Wrapper genérico de secção ------------------------------------------------------------- */
 .section-wrapper {
     max-width: 1100px;
     margin: 40px auto;
     padding: 0 24px;
 }
 
-/* ── Cabeçalho de secção (título + botão) ─────────────────────── */
+/* ----- Cabeçalho de secção (título + botão) ------------------------------------------- */
 .section-page-header {
     display: flex;
     align-items: center;
@@ -2551,7 +2551,7 @@ body {
 }
 .btn-new:hover { background: #1b4332; }
 
-/* ── Loading / Empty states ───────────────────────────────────── */
+/* ----- Loading / Empty states ----------------------------------------------------------------------- */
 .section-loading, .section-empty {
     text-align: center;
     padding: 60px 20px;
@@ -2564,7 +2564,7 @@ body {
     display: block;
 }
 
-/* ── Toast ────────────────────────────────────────────────────── */
+/* ----- Toast ---------------------------------------------------------------------------------------------- */
 .toast {
     position: fixed;
     bottom: 32px;
@@ -2583,7 +2583,7 @@ body {
 .toast.success { background: #2d6a4f; }
 .toast.error   { background: #c0392b; }
 
-/* ── Modal ────────────────────────────────────────────────────── */
+/* ----- Modal ---------------------------------------------------------------------------------------------- */
 .modal-overlay {
     display: none;
     position: fixed;
@@ -2935,3 +2935,20 @@ body {
 .btn-edit-ing:hover   { background: #c8e6c9; }
 .btn-delete-ing { background: #fdecea; color: #c0392b; }
 .btn-delete-ing:hover { background: #f5c6cb; }
+
+/*
+=======================================
+REGISTO
+=======================================
+*/
+
+/* Mensagem de erro inline nos formulários */
+.form-error {
+    color: #c0392b;
+    background: #fdecea;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}

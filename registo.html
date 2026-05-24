@@ -4,77 +4,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Criar Conta | Café Santuário</title>
-
     <link rel="stylesheet" href="style.css">
-
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lato:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
 
-    <main class="login-page">
+<main class="login-page">
 
-        <section class="login-left">
-            <div class="overlay"></div>
-            <div class="left-content">
-                <span class="badge">☕ CAFÉ SANTUÁRIO</span>
-                <h1>Junte-se ao<br>Santuário</h1>
-                <p>Crie a sua conta para guardar as suas preferências, gerir reservas e aceder a experiências exclusivas.</p>
-            </div>
-        </section>
+    <!-- Lado esquerdo — imagem/texto (igual ao login) -->
+    <section class="login-left">
+        <div class="overlay"></div>
+        <div class="left-content">
+            <span class="badge">☕ CAFÉ SANTUÁRIO</span>
+            <h1>Junte-se ao<br>Santuário</h1>
+            <p>Crie a sua conta para guardar as suas preferências, gerir reservas e aceder a experiências exclusivas.</p>
+        </div>
+    </section>
 
-        <section class="login-right">
-            <div class="form-container">
-                
-                <header class="form-header">
-                    <h2>Criar Nova Conta</h2>
-                    <p>Preencha os dados abaixo para se registar.</p>
-                </header>
+    <!-- Lado direito — formulário -->
+    <section class="login-right">
+        <div class="form-container">
 
-                <form id="register-form" class="auth-form">
-    
-                 <div class="form-group">
-                        <label for="reg-username">Nome de Utilizador (Username)</label>
-                        <input type="text" id="reg-username" placeholder="Escolha um username" required>
+            <header class="form-header">
+                <h2>Criar Nova Conta</h2>
+                <p>Preencha os dados abaixo para se registar.</p>
+            </header>
+
+            <form id="register-form" class="login-form">
+
+                <div class="form-group">
+                    <label for="reg-username">Nome de Utilizador</label>
+                    <input type="text" id="reg-username" placeholder="Escolha um username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="reg-password">Palavra-passe</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="reg-password" placeholder="••••••••" required>
+                        <i class="fa-regular fa-eye toggle-password-icon" id="toggle-pass"></i>
                     </div>
-                    <div class="form-group">
-                        <label for="reg-password">Palavra-passe</label>
-                        <div class="password-wrapper">
-                            <input type="password" id="reg-password" placeholder="••••••••" minlength="6" maxlength="30" required>
-                            <i class="fa-regular fa-eye toggle-password-icon" id="toggleRegPassword"></i>
-                        </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="reg-confirm">Confirmar Palavra-passe</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="reg-confirm" placeholder="••••••••" required>
+                        <i class="fa-regular fa-eye toggle-password-icon" id="toggle-confirm"></i>
                     </div>
+                </div>
 
-                    <button type="submit" class="login-btn">
-                        Registar Conta
-                    </button>
+                <!-- Mensagem de erro inline (sem alert) -->
+                <p class="form-error" id="registo-erro" style="display:none;"></p>
 
-                </form>
+                <button type="submit" class="login-btn">
+                    Criar Conta
+                </button>
 
-                <p class="register-text">
-                    Já tem uma conta? 
-                    <a href="login.html">Iniciar Sessão</a>
-                </p>
+            </form>
 
-            </div>
-        </section>
+            <p class="register-text">
+                Já tem uma conta?
+                <a href="login.html">Iniciar Sessão</a>
+            </p>
 
-    </main>
+        </div>
+    </section>
 
-    <script src="api.js"></script>
-    <script src="registo.js"></script>
-    <script>
-        // Lógica visual rápida para alternar a visibilidade da password
-        const togglePassword = document.getElementById('toggleRegPassword');
-        const passwordInput = document.getElementById('reg-password');
+</main>
 
-        togglePassword.addEventListener('click', function() {
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
-            this.classList.toggle('fa-eye');
-            this.classList.toggle('fa-eye-slash');
-        });
-    </script>
+<script src="api.js"></script>
+<script src="registo.js"></script>
 </body>
 </html>

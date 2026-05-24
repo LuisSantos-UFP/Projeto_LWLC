@@ -1,13 +1,11 @@
 // main.js
 
-// === MODO DE DESENVOLVIMENTO (FORÇAR ADMIN) ===
-// Apaga ou comenta estas duas linhas quando fores entregar o projeto!
-//localStorage.setItem("userRole", "ADMIN");
-//localStorage.setItem("user", JSON.stringify({ role: "admin" }));
-// ===============================================
-
 const token = localStorage.getItem("token");
-const role = localStorage.getItem("userRole");  
+if (!token) {
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("user");
+}
+const role = localStorage.getItem("userRole");
 const paginaAtual = window.location.pathname;
 
 // Se tentar entrar na página de admin e não for ADMIN
@@ -58,7 +56,6 @@ function renderNavbar() {
 
     if (currentUser.role === 'admin' || storedRole === "ADMIN") {
         navLinks += `
-            <li><a href="admin.html" class="nav-link nav-admin">Painel Admin</a></li>
             <li><a href="gestao.html" class="nav-link nav-admin">Sala de Gestão</a></li>
         `;
     } else if (currentUser.role === 'employee' || storedRole === "EMPLOYEE") {
@@ -99,7 +96,7 @@ function renderNavbar() {
     }
 }
 // ===============================================
-// ── LÓGICA DO MENU DINÂMICO CORRIGIDA ──────────
+// ----- LÓGICA DO MENU DINÂMICO CORRIGIDA ---------------
 // ===============================================
 
 // 1. Mudámos para o endpoint correto indicado pelo teu Swagger

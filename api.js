@@ -1,7 +1,7 @@
 // api.js
 const BASE_URL = "https://siws.ufp.pt/lwlc/api";
 
-// ── Cabeçalhos com token ──────────────────────────────────────
+// ----- Cabeçalhos com token -----------------------------------------------------------------------
 function getAuthHeaders(isFormData = false) {
     const token = localStorage.getItem("token");
     const headers = {};
@@ -10,7 +10,7 @@ function getAuthHeaders(isFormData = false) {
     return headers;
 }
 
-// ── Tratamento de resposta centralizado ──────────────────────
+// ----- Tratamento de resposta centralizado --------------------------------------
 async function handleResponse(response) {
     if (!response.ok) {
         let msg = `Erro ${response.status}`;
@@ -24,7 +24,7 @@ async function handleResponse(response) {
     return response.json();
 }
 
-// ── Funções genéricas (usadas pelo gestao.js) ─────────────────
+// ----- Funções genéricas (usadas pelo gestao.js) --------------------------
 async function getData(endpoint) {
     const response = await fetch(`${BASE_URL}${endpoint}`, {
         method: "GET",
@@ -69,18 +69,52 @@ async function uploadImagem(endpoint, formData, method = "POST") {
     return handleResponse(response);
 }
 
-// ── Funções de autenticação ───────────────────────────────────
-async function registarUtilizador(utilizador, password) {
-    if (!utilizador || !password) {
+// ----- Funções de autenticação -----------------------------------------------------------------------
+async function registarUtilizador(username, password) {
+    if (!username || !password) {
         alert("Por favor, preencha todos os campos.");
         return;
     }
+
     try {
-        await postData("/auth/register", { utilizador, password });
+        // 1. Login como admin para obter token temporário
+        const loginResp = await fetch(`${BASE_URL}/auth/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username: "admin", password: "Secure1!" })
+        });
+
+        if (!loginResp.ok) throw new Error("Não foi possível autenticar para registo.");
+        const loginData = await loginResp.json();
+        const adminToken = loginData.token;
+
+        // 2. Criar utilizador no endpoint /users
+        const registerResp = await fetch(`${BASE_URL}/users`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${adminToken}`
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password,
+                type:     "CLIENT",
+                balance:  0
+            })
+        });
+
+        if (!registerResp.ok) {
+            const err = await registerResp.json().catch(() => ({}));
+            throw new Error(err.message || `Erro ${registerResp.status}`);
+        }
+
+        // 3. Token de admin descartado
         alert("Conta criada com sucesso! Já pode fazer login.");
         window.location.href = "login.html";
+
     } catch (erro) {
         alert("Erro ao criar conta: " + erro.message);
+        throw erro;
     }
 }
 
