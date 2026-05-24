@@ -697,7 +697,6 @@ function renderizarIngredientes(ingredientes) {
                 </span>
             </div>
             <div class="ingrediente-card-actions">
-                <button class="btn-edit-ing"   onclick="editarIngrediente(${i.id})">✏️ Editar</button>
                 <button class="btn-delete-ing" onclick="apagarIngrediente(${i.id}, '${i.name}')">🗑️ Apagar</button>
             </div>
         </div>`).join('');
@@ -713,19 +712,6 @@ function abrirModalIngrediente() {
 
 function fecharModalIngrediente() {
     document.getElementById('modal-ingrediente').classList.remove('active');
-}
-
-async function editarIngrediente(id) {
-    try {
-        const i = await getData(`/ingredients/${id}`);
-        idEmEdicao = id;
-        document.getElementById('modal-ing-titulo').textContent = 'Editar Ingrediente';
-        document.getElementById('input-nome-ing').value = i.name || '';
-        document.getElementById('input-tipo-ing').value = i.type || '';
-        document.getElementById('modal-ingrediente').classList.add('active');
-    } catch (e) {
-        mostrarToast('Erro ao carregar ingrediente.', 'error');
-    }
 }
 
 async function guardarIngrediente() {

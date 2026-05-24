@@ -139,3 +139,22 @@ async function loginUtilizador(username, password) {
     // Lança erro se falhar — o login.js trata do redirecionamento
     console.log("Resposta completa da API:", JSON.stringify(resposta));
 }
+
+// ----- Saldo -----------------------------------------------------------------------
+
+async function adicionarSaldo(novoSaldo) {
+    // GET para obter o type atual antes de fazer PUT
+    
+    const userData = await getData('/users/me');
+    const response = await fetch(`${BASE_URL}/users/me`, {
+        method: "PUT",
+        headers: getAuthHeaders(),
+        body: JSON.stringify({
+            username: userData.username,
+            type:     userData.type,
+            balance:  novoSaldo
+        })
+    });
+
+    return handleResponse(response);
+}
