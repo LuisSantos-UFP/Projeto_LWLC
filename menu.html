@@ -20,12 +20,12 @@
 <body>
 
     <!-- --------- HEADER --------- -->
-    <header class="main-header">
 
-        <div class="logo">
-            Café Santuário
-        </div>
+        <header class="main-header">
 
+            <div class="logo">
+                <a href="index.html" style="color: inherit; text-decoration: none;">Café Santuário</a>
+            </div>
         <nav class="main-nav">
             <a href="index.html" class="nav-link">Início</a>
             <a href="menu.html" class="nav-link active">Menu</a>
@@ -77,43 +77,21 @@
             <h3>Categorias</h3>
 
             <div class="category-list">
-                <button class="category-btn active" data-category="todos">
-                    Todos
-                </button>
 
-                <button class="category-btn" data-category="cafes">
-                    Cafés
-                </button>
+                <button class="category-btn active">Todos</button>
+                <button class="category-btn">Carne</button>
+                <button class="category-btn">Peixe</button>
+                <button class="category-btn">Vegetariano</button>
+                <button class="category-btn">Bebidas</button>
 
-                <button class="category-btn" data-category="pastelaria">
-                    Pastelaria
-                </button>
-
-                <button class="category-btn" data-category="pequeno-almoco">
-                    Pequeno-Almoço
-                </button>
-
-                <button class="category-btn" data-category="bebidas">
-                    Bebidas
-                </button>
             </div>
 
         </aside>
 
         <section class="menu-content">
-
-            <div id="menu-products-grid" class="products-grid">
-                
-                <div class="menu-placeholder">
-                    <div class="placeholder-icon">
-                        <i class="fa-solid fa-spinner fa-spin"></i>
-                    </div>
-                    <h2>A carregar o menu...</h2>
-                    <p>Estamos a preparar os nossos melhores sabores para si.</p>
-                </div>
-
+            <div id="menu-products-grid" class="menu-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:24px; width:100%;">
+                <p style="color:#666; font-size:16px; padding:20px;">A carregar os nossos melhores sabores...</p>
             </div>
-
         </section>
 
     </main>
@@ -164,6 +142,6 @@
     <script src="api.js"></script>
     <script src="login.js"></script>
     <script src="main.js"></script>
-
-</body>
+    <script src="menu.js"></script>
+ </body>
 </html>
