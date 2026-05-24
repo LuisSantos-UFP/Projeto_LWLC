@@ -291,5 +291,4 @@ function adicionarAoCarrinhoLocalStorage(produto) {
     alert(`"${produto.nome}" foi adicionado ao seu carrinho!`);
 }
 
-
 document.addEventListener('DOMContentLoaded', renderNavbar);

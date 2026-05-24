@@ -42,9 +42,20 @@ function mostrarToastReservas(msg, tipo = "success") {
 // ESTADO
 // ============================================================
 
-let carrinho = [];
 let tipoServico = "local"; // "local", "recolha", "delivery"
 let horarioSelecionado = "";
+
+// ============================================================
+// FUNÇÕES AUXILIARES DE COESÃO DO LOCALSTORAGE
+// ============================================================
+function obterCarrinhoLocalStorage() {
+    let car = localStorage.getItem('carrinho');
+    return car ? JSON.parse(car) : [];
+}
+
+function guardarCarrinhoLocalStorage(carrinho) {
+    localStorage.setItem('carrinho', JSON.stringify(carrinho));
+}
 
 // ============================================================
 // INIT
@@ -55,7 +66,7 @@ async function initReservas() {
     configurarHorario();
     configurarFormulario();
     await carregarSugestoes();
-    atualizarCarrinho();
+    atualizarCarrinhoETransmitir(); // Renderiza tudo em sincronia no arranque
 }
 
 // ============================================================
@@ -120,24 +131,28 @@ async function carregarSugestoes() {
             return;
         }
 
-        container.innerHTML = pratos.map(p => `
-            <div style="background:#fff;border-radius:14px;padding:16px;
-                box-shadow:0 2px 10px rgba(0,0,0,0.07);display:flex;
-                flex-direction:column;gap:6px;">
-                <div style="font-size:24px;">🍽️</div>
-                <div style="font-weight:700;font-size:14px;color:#1a1a1a;">${p.name}</div>
-                <div style="font-size:12px;color:#888;">
-                    ${[...new Set(p.ingredientNames || [])].slice(0,3).join(', ')}${(p.ingredientNames||[]).length > 3 ? '...' : ''}
+        container.innerHTML = pratos.map(p => {
+            // Escapar strings de forma segura contra aspas simples/duplas nos nomes
+            const pratoSeguro = JSON.stringify(p).replace(/'/g, "&#39;");
+            return `
+                <div style="background:#fff;border-radius:14px;padding:16px;
+                    box-shadow:0 2px 10px rgba(0,0,0,0.07);display:flex;
+                    flex-direction:column;gap:6px;">
+                    <div style="font-size:24px;">🍽️</div>
+                    <div style="font-weight:700;font-size:14px;color:#1a1a1a;">${p.name}</div>
+                    <div style="font-size:12px;color:#888;">
+                        ${[...new Set(p.ingredientNames || [])].slice(0,3).join(', ')}${(p.ingredientNames||[]).length > 3 ? '...' : ''}
+                    </div>
+                    <div style="font-weight:800;color:#2d6a4f;font-size:15px;">${parseFloat(p.price || 0).toFixed(2)} €</div>
+                    <button onclick='adicionarAoCarrinhoDasSugestoes(${pratoSeguro})' 
+                        style="margin-top:6px;width:100%;padding:8px;background:#2d6a4f;
+                        color:#fff;border:none;border-radius:8px;font-size:13px;
+                        font-weight:700;cursor:pointer;">
+                        + Adicionar
+                    </button>
                 </div>
-                <div style="font-weight:800;color:#2d6a4f;font-size:15px;">${parseFloat(p.price || 0).toFixed(2)} €</div>
-                <button onclick='adicionarAoCarrinho(${JSON.stringify(JSON.stringify(p))})' 
-                    style="margin-top:6px;width:100%;padding:8px;background:#2d6a4f;
-                    color:#fff;border:none;border-radius:8px;font-size:13px;
-                    font-weight:700;cursor:pointer;">
-                    + Adicionar
-                </button>
-            </div>
-        `).join('');
+            `;
+        }).join('');
 
     } catch (e) {
         container.innerHTML = `<p style="color:#aaa;font-size:14px;">Erro ao carregar pratos.</p>`;
@@ -145,43 +160,73 @@ async function carregarSugestoes() {
 }
 
 // ============================================================
-// CARRINHO — "Os Seus Pedidos"
+// ADICIONAR E REMOVER ATRAVÉS DO LOCALSTORAGE
 // ============================================================
 
-function adicionarAoCarrinho(pratoJson) {
-    const p = JSON.parse(pratoJson);
-    carrinho.push({ id: p.id, nome: p.name, preco: parseFloat(p.price || 0) });
-    atualizarCarrinho();
+window.adicionarAoCarrinhoDasSugestoes = function(p) {
+    let carrinho = obterCarrinhoLocalStorage();
+    
+    // Alinha a estrutura com o padrão do main.js
+    const itemExistente = carrinho.find(item => item.nome === p.name);
+    if (itemExistente) {
+        itemExistente.quantidade += 1;
+    } else {
+        carrinho.push({
+            id: p.id || `sug-${Date.now()}`,
+            nome: p.name,
+            preco: parseFloat(p.price || 12.50),
+            quantidade: 1
+        });
+    }
+
+    guardarCarrinhoLocalStorage(carrinho);
+    atualizarCarrinhoETransmitir();
     mostrarToastReservas(`"${p.name}" adicionado!`);
-}
+};
 
-function removerDoCarrinho(index) {
+window.removerDoCarrinhoUnificado = function(index) {
+    let carrinho = obterCarrinhoLocalStorage();
     const nome = carrinho[index]?.nome;
-    carrinho.splice(index, 1);
-    atualizarCarrinho();
+    
+    if (carrinho[index].quantidade > 1) {
+        carrinho[index].quantidade -= 1;
+    } else {
+        carrinho.splice(index, 1);
+    }
+    
+    guardarCarrinhoLocalStorage(carrinho);
+    atualizarCarrinhoETransmitir();
     if (nome) mostrarToastReservas(`"${nome}" removido.`, "error");
-}
+};
 
-function atualizarCarrinho() {
-    // ── Os Seus Pedidos (carrinho) ──
+// ============================================================
+// RENDERIZAÇÃO UNIFICADA (CENTRAL DE SINCRO)
+// ============================================================
+
+function atualizarCarrinhoETransmitir() {
+    let carrinho = obterCarrinhoLocalStorage();
+
+    // 1. ── Renderizar no Centro: "Os Seus Pedidos" ──
     const ordersContainer = document.getElementById("orders-container");
     if (ordersContainer) {
         if (carrinho.length === 0) {
             ordersContainer.innerHTML = `
                 <p style="color:#aaa;font-size:14px;padding:12px 0;">
-                    Nenhum item adicionado. Escolha um prato nas sugestões abaixo.
+                    Nenhum item adicionado. Escolha um prato nas sugestões abaixo ou visite o Menu.
                 </p>`;
         } else {
             ordersContainer.innerHTML = carrinho.map((item, i) => `
                 <div style="background:#fff;border-radius:14px;padding:16px;
                     box-shadow:0 2px 10px rgba(0,0,0,0.07);
                     display:flex;align-items:center;justify-content:space-between;
-                    border-left:4px solid #2d6a4f;">
+                    border-left:4px solid #2d6a4f; margin-bottom: 10px;">
                     <div>
                         <div style="font-weight:700;font-size:14px;color:#1a1a1a;">🍽️ ${item.nome}</div>
-                        <div style="font-size:13px;color:#2d6a4f;font-weight:700;margin-top:4px;">${item.preco.toFixed(2)} €</div>
+                        <div style="font-size:13px;color:#2d6a4f;font-weight:700;margin-top:4px;">
+                            ${item.quantidade}x ${item.preco.toFixed(2)} €
+                        </div>
                     </div>
-                    <button onclick="removerDoCarrinho(${i})"
+                    <button onclick="removerDoCarrinhoUnificado(${i})"
                         style="background:#fdecea;color:#c0392b;border:none;
                         border-radius:8px;padding:6px 12px;font-size:13px;
                         font-weight:600;cursor:pointer;">
@@ -192,40 +237,48 @@ function atualizarCarrinho() {
         }
     }
 
-    // ── Resumo do Pedido (sidebar) ──
+    // 2. ── Renderizar no Lado: "Resumo do Pedido" (Sidebar) ──
     const summaryContainer = document.getElementById("summary-container");
     const totalEl = document.getElementById("total-price");
 
     if (summaryContainer) {
         if (carrinho.length === 0) {
             summaryContainer.innerHTML = `
-                <p style="color:#aaa;font-size:13px;text-align:center;padding:12px 0;">
-                    Carrinho vazio.
-                </p>`;
-        } else {
-            summaryContainer.innerHTML = carrinho.map((item, i) => `
-                <div style="display:flex;align-items:center;justify-content:space-between;
-                    padding:8px 0;border-bottom:1px solid #f5f5f5;">
-                    <div>
-                        <div style="font-size:13px;font-weight:600;color:#1a1a1a;">${item.nome}</div>
-                        <div style="font-size:12px;color:#2d6a4f;font-weight:700;">${item.preco.toFixed(2)} €</div>
-                    </div>
-                    <button onclick="removerDoCarrinho(${i})"
-                        style="background:#fdecea;color:#c0392b;border:none;
-                        border-radius:6px;padding:4px 8px;cursor:pointer;font-size:12px;">✕</button>
+                <div class="carrinho-vazio" style="text-align: center; padding: 20px 0; color: #777;">
+                    <i class="fa-solid fa-basket-shopping" style="font-size: 24px; margin-bottom: 8px; color: #ccc;"></i>
+                    <p style="margin: 0; font-size: 14px;">O seu pedido está vazio.</p>
                 </div>
-            `).join('');
+            `;
+        } else {
+            summaryContainer.innerHTML = carrinho.map((item, i) => {
+                const subtotal = item.preco * item.quantidade;
+                return `
+                    <div class="summary-item" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 14px; color: #444;">
+                        <div class="item-info" style="flex: 1; padding-right: 10px;">
+                            <strong style="display: block; color: #222;">${item.nome}</strong>
+                            <small style="color: #888;">${item.quantidade}x ${item.preco.toFixed(2).replace('.', ',')}€</small>
+                        </div>
+                        <div class="item-valores" style="display: flex; align-items: center; gap: 12px;">
+                            <span style="font-weight: 500;">${subtotal.toFixed(2).replace('.', ',')} €</span>
+                            <button onclick="removerDoCarrinhoUnificado(${i})" style="background: none; border: none; color: #ff4d4d; cursor: pointer; padding: 0 4px; font-size: 13px;" title="Remover item">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
     }
 
+    // Calcular e setar o total global nos dois lados
+    const totalGeral = carrinho.reduce((sum, item) => sum + (item.preco * item.quantidade), 0);
     if (totalEl) {
-        const total = carrinho.reduce((sum, item) => sum + item.preco, 0);
-        totalEl.textContent = total.toFixed(2).replace('.', ',') + " €";
+        totalEl.textContent = totalGeral.toFixed(2).replace('.', ',') + " €";
     }
 }
 
 // ============================================================
-// CONFIRMAR RESERVA
+// CONFIRMAR RESERVA (LOOP DE COMPRA PARA O BACKEND)
 // ============================================================
 
 function configurarFormulario() {
@@ -240,6 +293,8 @@ function configurarFormulario() {
             window.location.href = "login.html";
             return;
         }
+
+        let carrinho = obterCarrinhoLocalStorage();
 
         if (carrinho.length === 0) {
             alert("Adicione pelo menos um prato ao pedido.");
@@ -263,44 +318,48 @@ function configurarFormulario() {
         }
 
         const btn = form.querySelector(".confirm-btn");
+        const textoOriginal = btn.textContent;
         btn.textContent = "A processar...";
         btn.disabled = true;
 
         let sucesso = 0;
         let erro = 0;
 
+        // Desenrola o loop respeitando a quantidade de cada prato no LocalStorage
         for (const item of carrinho) {
-            try {
-                const res = await fetch(`${API}/purchases`, {
-                    method: "POST",
-                    headers: authHeaders(),
-                    body: JSON.stringify({
-                        clientUsername: username,
-                        dishName: item.nome,
-                        date: data
-                    })
-                });
-                if (res.ok || res.status === 201) sucesso++;
-                else erro++;
-            } catch { erro++; }
+            for (let q = 0; q < item.quantidade; q++) {
+                try {
+                    const res = await fetch(`${API}/purchases`, {
+                        method: "POST",
+                        headers: authHeaders(),
+                        body: JSON.stringify({
+                            clientUsername: username,
+                            dishName: item.nome,
+                            date: data
+                        })
+                    });
+                    if (res.ok || res.status === 201) sucesso++;
+                    else erro++;
+                } catch { erro++; }
+            }
         }
 
-        btn.textContent = "Confirmar Reserva";
+        btn.textContent = textoOriginal;
         btn.disabled = false;
 
         if (sucesso > 0) {
             mostrarToastReservas(`${sucesso} prato(s) reservado(s) com sucesso!`);
-            carrinho = [];
-            atualizarCarrinho();
+            guardarCarrinhoLocalStorage([]); // Esvazia o LocalStorage real
+            atualizarCarrinhoETransmitir(); // Limpa a UI de ambas as seções
         }
         if (erro > 0) {
-            mostrarToastReservas(`${erro} prato(s) falharam.`, "error");
+            mostrarToastReservas(`${erro} pedido(s) falharam no envio.`, "error");
         }
     });
 }
 
 // ============================================================
-// ARRANQUE
+// ARRANQUE SEGURO
 // ============================================================
 
 if (document.readyState === "loading") {
