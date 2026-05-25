@@ -112,7 +112,6 @@ function templatePratos() {
 
     </div>
 
-    <!-- MODAL CRIAR / EDITAR PRATO -->
     <div class="modal-overlay" id="modal-prato">
         <div class="modal-box">
             <div class="modal-header">
@@ -134,6 +133,15 @@ function templatePratos() {
                     display: flex; flex-direction: column; gap: 4px;">
                     <p style="color:#aaa; font-size:13px;">A carregar ingredientes...</p>
                 </div>
+            </div>
+
+            <div class="form-group">
+                <label>Categoria do Prato *</label>
+                <select id="input-categoria-prato" style="width:100%; padding:10px; border:1.5px solid #e0e0e0; border-radius:10px; font-size:14px; background:#fff; font-family:inherit;">
+                    <option value="carne">🥩 Carne</option>
+                    <option value="peixe">🐟 Peixe</option>
+                    <option value="vegetariano">🌱 Vegetariano</option>
+                </select>
             </div>
 
             <div class="form-group">
@@ -220,6 +228,7 @@ async function abrirModalPrato() {
     idEmEdicao = null;
     document.getElementById('modal-prato-titulo').textContent = 'Novo Prato';
     document.getElementById('input-nome-prato').value = '';
+    document.getElementById('input-categoria-prato').value = 'carne'; // <--- Reset do select de categoria
     document.getElementById('input-preco-prato').value = '';
     document.getElementById('input-imagem-prato').value = '';
     document.getElementById('modal-prato').classList.add('active');
@@ -235,6 +244,7 @@ function editarPrato(pratoJson) {
     idEmEdicao = p.id;
     document.getElementById('modal-prato-titulo').textContent = 'Editar Prato';
     document.getElementById('input-nome-prato').value = p.name || '';
+    document.getElementById('input-categoria-prato').value = p.category || 'carne'; // <--- Carrega a categoria salva (padrão carne se vazio)
     document.getElementById('input-preco-prato').value = p.price || '';
     document.getElementById('modal-prato').classList.add('active');
     preencherIngredientesModal(p.ingredientNames || []);
@@ -270,14 +280,22 @@ async function preencherIngredientesModal(selecionados = []) {
 async function guardarPrato() {
     const nome = document.getElementById('input-nome-prato').value.trim();
     const preco = parseFloat(document.getElementById('input-preco-prato').value);
+    const categoria = document.getElementById('input-categoria-prato').value; // <--- Captura o valor ('carne', 'peixe', 'vegetariano')
+
     if (!nome) { mostrarToast('O nome do prato é obrigatório.', 'error'); return; }
     if (isNaN(preco) || preco < 0) { mostrarToast('Insira um preço válido.', 'error'); return; }
 
     const ingredientesSelecionados = [...document.querySelectorAll('#ingredientes-container input[name="ing"]:checked')]
         .map(cb => cb.value);
 
-    // multipart/form-data: parte 'dish' como JSON + parte 'image' opcional
-    const dishObj = { name: nome, price: preco, ingredientNames: ingredientesSelecionados };
+    // multipart/form-data: Adicionado a propriedade 'category' dentro do JSON enviado à API
+    const dishObj = { 
+        name: nome, 
+        price: preco, 
+        category: categoria, // <--- Enviado para a base de dados
+        ingredientNames: ingredientesSelecionados 
+    };
+    
     const ficheiroImg = document.getElementById('input-imagem-prato').files[0];
     const formData = new FormData();
     formData.append('dish', new Blob([JSON.stringify(dishObj)], { type: 'application/json' }));
@@ -286,7 +304,7 @@ async function guardarPrato() {
     try {
         if (idEmEdicao) {
             await uploadImagem(`/dishes/${idEmEdicao}`, formData, 'PUT');
-            mostrarToast('Prato atualizado com sucesso!');
+            mostrarToast('Prato updated com sucesso!');
         } else {
             await uploadImagem('/dishes', formData, 'POST');
             mostrarToast('Prato criado com sucesso!');
