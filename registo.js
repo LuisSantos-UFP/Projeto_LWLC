@@ -1,3 +1,4 @@
+// Responsavel pelo registo de novos utilizadores.
 document.addEventListener('DOMContentLoaded', () => {
 
     // Submissão do formulário

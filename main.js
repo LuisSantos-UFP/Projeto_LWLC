@@ -1,4 +1,4 @@
-// main.js
+// Controlo de acesso das paginas com base no perfil do utilizador.
 
 const token = localStorage.getItem("token");
 if (!token) {
@@ -40,18 +40,16 @@ function handleLogout() {
     window.location.href = 'index.html'; 
 }
 
-// Função da Navbar com as classes de estilo corretas
+// Função da Navbar (Constructor)
 function renderNavbar() {
     const currentUser = getCurrentUser();
     const storedRole = localStorage.getItem('userRole'); 
     
-    // Procura pela classe .main-nav que o teu CSS usa para dar estilo!
     const navbarContainer = document.querySelector('.main-nav') || document.getElementById('main-navbar');
     const headerIcons = document.querySelector('.header-icons');
     
     if (!navbarContainer) return;
 
-    // Criamos a estrutura diretamente com as tags <li> contendo a classe nav-link
     let navLinks = ``;
 
     if (currentUser.role === 'admin' || storedRole === "ADMIN") {
@@ -95,11 +93,11 @@ function renderNavbar() {
         });
     }
 }
+
 // ===============================================
-// ----- LÓGICA DO MENU DINÂMICO CORRIGIDA ---------------
+// MENU DINÂMICO  
 // ===============================================
 
-// 1. Mudámos para o endpoint correto indicado pelo teu Swagger
 const MENU_ENDPOINT = "/menus"; 
 
 let todosOsMenus = []; 
@@ -107,8 +105,6 @@ let todosOsMenus = [];
 document.addEventListener('DOMContentLoaded', () => {
     if (window.location.pathname.includes("menu.html")) {
         carregarMenuDoBackend();
-        // Nota: Como a API devolve pratos do dia, a filtragem por categorias antigas (Cafés, etc.) 
-        // poderá não fazer sentido se a API não os enviar. Deixamos ativo para o caso de quereres adaptar.
         configurarFiltrosCategorias();
     }
 });

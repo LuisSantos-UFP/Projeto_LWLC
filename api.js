@@ -1,5 +1,7 @@
-// api.js
+// Configuracao base da API e funcoes reutilizaveis para pedidos HTTP.
 const BASE_URL = "https://siws.ufp.pt/lwlc/api";
+
+// Gera os headers necessarios para pedidos autenticados.
 
 // ----- Cabeçalhos com token -----------------------------------------------------------------------
 function getAuthHeaders(isFormData = false) {
@@ -11,6 +13,7 @@ function getAuthHeaders(isFormData = false) {
 }
 
 // ----- Tratamento de resposta centralizado --------------------------------------
+// Centraliza o tratamento de erros e respostas vazias.
 async function handleResponse(response) {
     if (!response.ok) {
         let msg = `Erro ${response.status}`;
@@ -77,7 +80,7 @@ async function registarUtilizador(username, password) {
     }
 
     try {
-        // 1. Login como admin para obter token temporário
+        // Login como admin para obter token temporário
         const loginResp = await fetch(`${BASE_URL}/auth/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -88,7 +91,7 @@ async function registarUtilizador(username, password) {
         const loginData = await loginResp.json();
         const adminToken = loginData.token;
 
-        // 2. Criar utilizador no endpoint /users
+        // Criar utilizador no endpoint /users
         const registerResp = await fetch(`${BASE_URL}/users`, {
             method: "POST",
             headers: {
@@ -108,7 +111,7 @@ async function registarUtilizador(username, password) {
             throw new Error(err.message || `Erro ${registerResp.status}`);
         }
 
-        // 3. Token de admin descartado
+        // Token de admin descartado
         alert("Conta criada com sucesso! Já pode fazer login.");
         window.location.href = "login.html";
 

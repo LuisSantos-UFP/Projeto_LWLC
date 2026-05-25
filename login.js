@@ -1,4 +1,4 @@
-// API --------------------------------------------------------------
+// Responsavel pelo processo de autenticacao do utilizador.
 document.addEventListener('DOMContentLoaded', () => {
     // Procura pelo formulário na página login.html
     const loginForm = document.querySelector('.login-form');

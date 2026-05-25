@@ -1,4 +1,4 @@
-// perfil.js
+// Gestao dos dados apresentados na pagina de perfil.
 document.addEventListener('DOMContentLoaded', async () => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const cvv      = document.getElementById('cc-cvv').value.trim();
         const valor    = parseFloat(document.getElementById('cc-valor').value);
 
-        // Validações fictícias
+        // Validações ficticias
         if (!nome || numero.length !== 16 || validade.length !== 5 || cvv.length !== 3) {
             mostrarErroModal("Por favor, preencha todos os campos corretamente.");
             return;

@@ -1,10 +1,8 @@
-// reservas.js — RF7: Gestão de Compras (página do cliente)
+// Gestao de reservas e compras do utilizador.
 
 const API = "https://siws.ufp.pt/lwlc/api";
 
-// ============================================================
-// UTILITÁRIOS
-// ============================================================
+// Funcoes auxiliares usadas ao longo da pagina.
 
 function getToken() { return localStorage.getItem("token"); }
 function getUsername() {
@@ -132,7 +130,6 @@ async function carregarSugestoes() {
         }
 
         container.innerHTML = pratos.map(p => {
-            // Escapar strings de forma segura contra aspas simples/duplas nos nomes
             const pratoSeguro = JSON.stringify(p).replace(/'/g, "&#39;");
             return `
                 <div style="background:#fff;border-radius:14px;padding:16px;
@@ -206,7 +203,7 @@ window.removerDoCarrinhoUnificado = function(index) {
 function atualizarCarrinhoETransmitir() {
     let carrinho = obterCarrinhoLocalStorage();
 
-    // 1. ----- Renderizar no Centro: "Os Seus Pedidos" -----
+    // Renderizar no Centro: "Os Seus Pedidos" 
     const ordersContainer = document.getElementById("orders-container");
     if (ordersContainer) {
         if (carrinho.length === 0) {
@@ -237,7 +234,7 @@ function atualizarCarrinhoETransmitir() {
         }
     }
 
-    // 2. ----- Renderizar no Lado: "Resumo do Pedido" (Sidebar) -----
+    //Renderizar no Lado: "Resumo do Pedido" (Sidebar)
     const summaryContainer = document.getElementById("summary-container");
     const totalEl = document.getElementById("total-price");
 

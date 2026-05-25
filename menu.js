@@ -1,17 +1,18 @@
-// menu.js — Gestão Dinâmica do Menu (Montra Geral + Menus por Data)
+// Carregamento dinamico do menu e filtros de categorias.
 
 let todosOsMenusDoBackend = [];
 let todosOsPratosDoBackend = []; 
 let dadosPratosGlobal = {}; 
 let filtroAtual = "todos";
 
+// Inicializa o menu assim que a pagina termina de carregar.
 document.addEventListener("DOMContentLoaded", () => {
     carregarMenuDoBackend();
     configurarFiltrosCategorias();
 });
 
 
-// ── 1. Carregar dados do Backend ─────────────────────────────────────────
+// Carrega menus e pratos a partir da API.
 async function carregarMenuDoBackend() {
     const contentSection = document.querySelector(".menu-content");
     if (!contentSection) return;
@@ -28,7 +29,7 @@ async function carregarMenuDoBackend() {
         todosOsPratosDoBackend = pratos; 
         todosOsMenusDoBackend = menus;
 
-        // Mapeia os metadados iniciais de preço e ID de cada prato vindo de /dishes
+        // Procura os dados iniciais de preço e ID de cada prato vindo de /dishes
         pratos.forEach(p => { 
             dadosPratosGlobal[p.name] = {
                 id: p.id,
@@ -37,7 +38,7 @@ async function carregarMenuDoBackend() {
             }; 
         });
 
-        // Aplica o filtro inicial ("todos") que agora listará a montra de pratos
+        // Aplica o filtro inicial ("todos") que agora listará os pratos
         aplicarFiltro(filtroAtual);
         
         // Vai buscar os links assinados das imagens em background
@@ -68,7 +69,7 @@ async function carregarMenuDoBackend() {
 }
 
 
-// ── 2. Buscar Imagens em Background via Endpoint Dedicado ──────────────────
+// Procura Imagens em Background via Endpoint Dedicado 
 async function carregarImagensEmBackground(listaPratos) {
     listaPratos.forEach(async (prato) => {
         try {
@@ -96,7 +97,7 @@ function atualizarImagemNoCardNoEcrã(nomePrato, url) {
 }
 
 
-// ── 3. Aplicar Filtro (Correção Definitiva do Rótulo "Prato Geral") ──────────────
+// Aplicar Filtro 
 function aplicarFiltro(filtro) {
     filtroAtual = filtro;
     const contentSection = document.querySelector(".menu-content");
@@ -116,7 +117,7 @@ function aplicarFiltro(filtro) {
     let pratosFiltrados = [];
     
     todosOsPratosDoBackend.forEach(p => {
-        // 1. Lemos a categoria vinda da gestão (se existir)
+        // Lemos a categoria vinda da gestão (se existir)
         let categoriaDoBackend = p.category ? p.category.toLowerCase().trim() : ""; 
         let nomeMinusculo = p.name ? p.name.toLowerCase() : "";
         
@@ -124,7 +125,7 @@ function aplicarFiltro(filtro) {
         let icone = "🍽️";
         let tipoFinal = "geral";
 
-        // 2. Sistema de fallback: Se o prato for antigo (sem category), tenta adivinhar pelo nome
+        // Sistema de fallback: Se o prato for antigo (sem category), tenta adivinhar pelo nome
         if (categoriaDoBackend === "carne" || (!categoriaDoBackend && (nomeMinusculo.includes("chicken") || nomeMinusculo.includes("beef") || nomeMinusculo.includes("bife") || nomeMinusculo.includes("frango") || nomeMinusculo.includes("carne") || nomeMinusculo.includes("bacon")))) {
             categoriaLabel = "Prato de Carne";
             icone = "🥩";
@@ -139,7 +140,7 @@ function aplicarFiltro(filtro) {
             tipoFinal = "vegetariano";
         }
 
-        // 3. Regras de filtragem baseadas no botão ativo da barra lateral
+        // Regras de filtragem baseadas no botão ativo da barra lateral
         const correspondeTodos = (filtro === "todos");
         const correspondeCarne = (filtro === "carne" && tipoFinal === "carne");
         const correspondePeixe = (filtro === "peixe" && tipoFinal === "peixe");
@@ -148,7 +149,7 @@ function aplicarFiltro(filtro) {
         if (correspondeTodos || correspondeCarne || correspondePeixe || correspondeVeg) {
             pratosFiltrados.push({
                 nome: p.name,
-                categoria: categoriaLabel, // <--- Aqui garante o texto "Prato de Carne", etc.
+                categoria: categoriaLabel,
                 data: "Catálogo", 
                 icone: icone
             });
@@ -160,13 +161,13 @@ function aplicarFiltro(filtro) {
         return;
     }
 
-    // 4. Renderização da Grid injetando a propriedade correta
+    // Renderização da Grid
     contentSection.innerHTML = `
         <div class="menu-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;width:100%;">
             ${pratosFiltrados.map(p => {
                 const dados = dadosPratosGlobal[p.nome] || {};
                 
-                // CRUCIAL: Passamos p.categoria (gerado dinamicamente acima) para o card
+                // Passamos p.categoria (gerado dinamicamente acima) para o card
                 return criarCardHtml(
                     p.nome, 
                     p.categoria, 
@@ -180,7 +181,7 @@ function aplicarFiltro(filtro) {
 }
 
 
-// ── 4. Renderizar Menus Agrupados por Data (Ordenados por Data Crescente) ─────────
+// Renderizar Menus Agrupados por Data (Ordenados por Data Crescente) 
 function renderizarCardsDeMenu(listaDeMenus) {
     const contentSection = document.querySelector(".menu-content");
     if (!contentSection) return;
@@ -190,11 +191,11 @@ function renderizarCardsDeMenu(listaDeMenus) {
         return;
     }
 
-    // [ORDENAÇÃO] Alterado para ordenar do mais antigo para o mais recente (Crescente)
+    // Ordenar do mais antigo para o mais recente (Crescente)
     const menusOrdenados = [...listaDeMenus].sort((a, b) => {
         const dataA = a.date ? a.date : "";
         const dataB = b.date ? b.date : "";
-        return dataA.localeCompare(dataB); // <--- Invertido aqui (dataA compara com dataB)
+        return dataA.localeCompare(dataB);
     });
 
     contentSection.innerHTML = `
@@ -226,7 +227,7 @@ function renderizarCardsDeMenu(listaDeMenus) {
 }
 
 
-// ── 5. Criar Componente de Card HTML ──────────────────────────────────────
+// Criar Componente de Card HTML 
 function criarCardHtml(nomePrato, categoriaLabel, dataMenu, icone, preco, urlImagem) {
     let dataDisplay = dataMenu;
     if (dataMenu && dataMenu.includes("-")) {
@@ -265,7 +266,7 @@ function criarCardHtml(nomePrato, categoriaLabel, dataMenu, icone, preco, urlIma
 }
 
 
-// ── 6. Configurar Eventos dos Botões de Filtro ─────────────────────────────
+// Configurar Eventos dos Botões de Filtro 
 function configurarFiltrosCategorias() {
     const botoesCategoria = document.querySelectorAll(".category-btn");
 
@@ -281,7 +282,7 @@ function configurarFiltrosCategorias() {
 }
 
 
-// ── 7. Adicionar ao Carrinho (LocalStorage) ─────────────────────────────────
+// Adicionar ao Carrinho (LocalStorage) 
 window.adicionarAoCarrinhoDoMenu = function(item) {
     let carrinho = localStorage.getItem("carrinho");
     carrinho = carrinho ? JSON.parse(carrinho) : [];

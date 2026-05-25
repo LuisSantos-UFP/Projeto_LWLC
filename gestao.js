@@ -1,12 +1,6 @@
-// ============================================================
-// gestao.js — Motor de navegação + templates + API
-// Café Santuário | Portal de Gestão
-// ============================================================
+// Gestao da navegacao, templates e comunicacao com a API.
 
-
-// ════════════════════════════════════════════════════════════
-// UTILITÁRIOS
-// ════════════════════════════════════════════════════════════
+// Utilitarios
 
 const diasSemana = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
 
@@ -18,6 +12,7 @@ function formatarDataCompleta(dataStr) {
     };
 }
 
+// Mostra mensagens temporarias de feedback ao utilizador.
 function mostrarToast(msg, tipo = 'success') {
     let t = document.getElementById('toast');
     if (!t) {
@@ -35,9 +30,9 @@ function mostrarToast(msg, tipo = 'success') {
 let idEmEdicao = null;
 
 
-// ════════════════════════════════════════════════════════════
+// ====================================
 // MOTOR DE NAVEGAÇÃO
-// ════════════════════════════════════════════════════════════
+// ====================================
 
 // Guarda o HTML do painel geral ao arrancar (antes de qualquer troca de secção)
 let painelGeral_HTML = '';
@@ -85,9 +80,9 @@ function carregarSecao(nome, linkClicado) {
 }
 
 
-// ════════════════════════════════════════════════════════════
+// ====================================
 // SECÇÃO: PRATOS
-// ════════════════════════════════════════════════════════════
+// ====================================
 
 function templatePratos() {
     return `
@@ -228,7 +223,7 @@ async function abrirModalPrato() {
     idEmEdicao = null;
     document.getElementById('modal-prato-titulo').textContent = 'Novo Prato';
     document.getElementById('input-nome-prato').value = '';
-    document.getElementById('input-categoria-prato').value = 'carne'; // <--- Reset do select de categoria
+    document.getElementById('input-categoria-prato').value = 'carne'; // Reset do select de categoria
     document.getElementById('input-preco-prato').value = '';
     document.getElementById('input-imagem-prato').value = '';
     document.getElementById('modal-prato').classList.add('active');
@@ -244,7 +239,7 @@ function editarPrato(pratoJson) {
     idEmEdicao = p.id;
     document.getElementById('modal-prato-titulo').textContent = 'Editar Prato';
     document.getElementById('input-nome-prato').value = p.name || '';
-    document.getElementById('input-categoria-prato').value = p.category || 'carne'; // <--- Carrega a categoria salva (padrão carne se vazio)
+    document.getElementById('input-categoria-prato').value = p.category || 'carne'; // Carrega a categoria salva (padrão carne se vazio)
     document.getElementById('input-preco-prato').value = p.price || '';
     document.getElementById('modal-prato').classList.add('active');
     preencherIngredientesModal(p.ingredientNames || []);
@@ -280,7 +275,7 @@ async function preencherIngredientesModal(selecionados = []) {
 async function guardarPrato() {
     const nome = document.getElementById('input-nome-prato').value.trim();
     const preco = parseFloat(document.getElementById('input-preco-prato').value);
-    const categoria = document.getElementById('input-categoria-prato').value; // <--- Captura o valor ('carne', 'peixe', 'vegetariano')
+    const categoria = document.getElementById('input-categoria-prato').value; // Captura o valor ('carne', 'peixe', 'vegetariano')
 
     if (!nome) { mostrarToast('O nome do prato é obrigatório.', 'error'); return; }
     if (isNaN(preco) || preco < 0) { mostrarToast('Insira um preço válido.', 'error'); return; }
@@ -288,11 +283,10 @@ async function guardarPrato() {
     const ingredientesSelecionados = [...document.querySelectorAll('#ingredientes-container input[name="ing"]:checked')]
         .map(cb => cb.value);
 
-    // multipart/form-data: Adicionado a propriedade 'category' dentro do JSON enviado à API
     const dishObj = { 
         name: nome, 
         price: preco, 
-        category: categoria, // <--- Enviado para a base de dados
+        category: categoria, 
         ingredientNames: ingredientesSelecionados 
     };
     
@@ -328,9 +322,9 @@ async function apagarPrato(id, nome) {
 }
 
 
-// ════════════════════════════════════════════════════════════
+// ====================================
 // SECÇÃO: MENUS
-// ════════════════════════════════════════════════════════════
+// ====================================
 
 function templateMenus() {
     return `
@@ -585,9 +579,9 @@ async function apagarMenu(id, dataDisplay) {
     }
 }
 
-// ════════════════════════════════════════════════════════════
+// ====================================
 // SECÇÃO: INGREDIENTES
-// ════════════════════════════════════════════════════════════
+// ====================================
 
 function templateIngredientes() {
     return `
@@ -774,9 +768,9 @@ async function apagarIngrediente(id, nome) {
 }
 
 
-// ════════════════════════════════════════════════════════════
+// ====================================
 // SECÇÃO: COMPRAS
-// ════════════════════════════════════════════════════════════
+// ====================================
 
 function templateCompras() {
     return `
@@ -985,9 +979,9 @@ async function apagarCompra(id, cliente) {
 }
 
 
-// ════════════════════════════════════════════════════════════
+// ====================================
 // SECÇÃO: UTILIZADORES (RF1 + RF3 + RF8)
-// ════════════════════════════════════════════════════════════
+// ====================================
 
 function templateUtilizadores() {
     return `
@@ -1185,13 +1179,13 @@ async function apagarUtilizador(id, username) {
     }
 }
 
-// ════════════════════════════════════════════════════════════
+// ====================================
 // PAINEL GERAL — KPIs em tempo real
-// ════════════════════════════════════════════════════════════
+// ====================================
 
 async function carregarKpisPainel() {
 
-    // ── 1. RECEITA DIÁRIA ────────────────────────────────────
+    // RECEITA DIÁRIA
     try {
         const hoje = new Date().toISOString().split('T')[0]; // "2026-05-25"
         const comprasHoje = await getData(`/purchases/date/${hoje}`);
@@ -1224,7 +1218,7 @@ async function carregarKpisPainel() {
         if (el) el.textContent = '0.00 €';
     }
 
-    // ── 2. EQUIPA ATIVA ──────────────────────────────────────
+    // EQUIPA ATIVA
     try {
         const users = await getData('/users');
         const employees = users.filter(u => u.type === 'EMPLOYEE');
@@ -1241,10 +1235,10 @@ async function carregarKpisPainel() {
         if (el) el.textContent = '0';
     }
 
-    // ── 3. TABELA DE GESTÃO DE EQUIPA ────────────────────────
+    // TABELA DE GESTÃO DE EQUIPA 
     await carregarTabelaEquipa();
 
-    // ── 4. BOTÃO "CONVIDAR MEMBRO" ───────────────────────────
+    // BOTÃO "CONVIDAR MEMBRO" 
     const btnConvidar = document.getElementById('action-trigger-convidar-membro');
     if (btnConvidar) {
         // Remove listeners antigos para evitar duplicados
@@ -1254,7 +1248,7 @@ async function carregarKpisPainel() {
     }
 }
 
-// ── Tabela de funcionários ───────────────────────────────────
+// Tabela de funcionários 
 async function carregarTabelaEquipa() {
     const tbody = document.getElementById('api-team-table-rows-container');
     if (!tbody) return;
@@ -1310,7 +1304,7 @@ async function carregarTabelaEquipa() {
     }
 }
 
-// ── Mudar cargo de um funcionário ───────────────────────────
+// Mudar cargo de um funcionário 
 async function mudarCargoFuncionario(id, novoTipo, username) {
     try {
         await putData(`/users/${id}`, {
@@ -1327,7 +1321,7 @@ async function mudarCargoFuncionario(id, novoTipo, username) {
     }
 }
 
-// ── Modal "Convidar Membro" pré-configurado como EMPLOYEE ───
+// Modal "Convidar Membro" pré-configurado como EMPLOYEE 
 function abrirModalNovoFuncionario() {
     // Reutiliza o modal de utilizadores mas pré-seleciona EMPLOYEE
     // Injeta o modal se ainda não existir no DOM
