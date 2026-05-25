@@ -133,8 +133,9 @@ async function loginUtilizador(username, password) {
              (resposta.user && resposta.user.type) || "CLIENT";       
               localStorage.setItem("userRole", role);
 
-        const userObj = { role: role.toLowerCase() };
-        localStorage.setItem("user", JSON.stringify(userObj));
+        const userObj = {username: username, role: role.toLowerCase()
+    };
+    localStorage.setItem("user", JSON.stringify(userObj));
     }
     // Lança erro se falhar — o login.js trata do redirecionamento
     console.log("Resposta completa da API:", JSON.stringify(resposta));

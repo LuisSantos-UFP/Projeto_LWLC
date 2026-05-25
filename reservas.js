@@ -330,16 +330,30 @@ function configurarFormulario() {
             for (let q = 0; q < item.quantidade; q++) {
                 try {
                     const res = await fetch(`${API}/purchases`, {
-                        method: "POST",
-                        headers: authHeaders(),
-                        body: JSON.stringify({
-                            clientUsername: username,
-                            dishName: item.nome,
-                            date: data
-                        })
-                    });
-                    if (res.ok || res.status === 201) sucesso++;
-                    else erro++;
+                    method: "POST",
+                    headers: authHeaders(),
+                    body: JSON.stringify({
+                        clientUsername: username,
+                        dishName: item.nome,
+                        date: data
+                    })
+                });
+
+                if (res.ok || res.status === 201) {
+
+                    sucesso++;
+
+                } else {
+
+                    erro++;
+
+                    // AQUI LÊS A RESPOSTA DO BACKEND
+                    const mensagem = await res.text();
+
+                    console.log("Mensagem backend:", mensagem);
+
+                    alert("Erro backend: " + mensagem);
+                }
                 } catch { erro++; }
             }
         }
