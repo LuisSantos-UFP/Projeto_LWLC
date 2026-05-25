@@ -74,12 +74,12 @@ function carregarSecao(nome, linkClicado) {
             break;
         case 'painel':
             area.innerHTML = painelGeral_HTML;
-            // Re-executa o script da data que estava no gestao.html
             const dateContainer = document.getElementById('live-date-string-container');
             if (dateContainer) {
                 const hoje = new Date();
                 dateContainer.textContent = hoje.toLocaleDateString('pt-PT', { day: 'numeric', month: 'long', year: 'numeric' });
             }
+            carregarKpisPainel();
             break;
     }
 }
@@ -1129,9 +1129,13 @@ function editarUtilizador(userJson) {
 
 function fecharModalUtilizador() {
     document.getElementById('modal-utilizador').classList.remove('active');
+    // Se estivermos no painel, recarrega a tabela de equipa
+    if (document.getElementById('api-team-table-rows-container')) {
+        carregarKpisPainel();
+    }
 }
 
-async function guardarUtilizador() {
+async function guardarUtilizador(recarregarPainel = false) {
     const username = document.getElementById('input-username').value.trim();
     const password = document.getElementById('input-password-user').value;
     const tipo = document.getElementById('input-tipo-user').value;
@@ -1156,7 +1160,11 @@ async function guardarUtilizador() {
             mostrarToast('Utilizador criado com sucesso!');
         }
         fecharModalUtilizador();
+        if (recarregarPainel) {
+            await carregarKpisPainel();
+        } else {
         carregarUtilizadores();
+        }
     } catch (e) {
         if (e.message.includes('uppercase')) {
             mostrarToast('A password deve ter pelo menos uma letra maiúscula.', 'error');
@@ -1175,4 +1183,205 @@ async function apagarUtilizador(id, username) {
     } catch (e) {
         mostrarToast('Erro ao apagar utilizador.', 'error');
     }
+}
+
+// ════════════════════════════════════════════════════════════
+// PAINEL GERAL — KPIs em tempo real
+// ════════════════════════════════════════════════════════════
+
+async function carregarKpisPainel() {
+
+    // ── 1. RECEITA DIÁRIA ────────────────────────────────────
+    try {
+        const hoje = new Date().toISOString().split('T')[0]; // "2026-05-25"
+        const comprasHoje = await getData(`/purchases/date/${hoje}`);
+
+        let receitaTotal = 0;
+
+        if (comprasHoje && comprasHoje.length > 0) {
+            // Para cada compra, busca o preço do prato
+            const pratos = await getData('/dishes');
+            const precoPorNome = {};
+            pratos.forEach(p => { precoPorNome[p.name] = parseFloat(p.price) || 0; });
+
+            comprasHoje.forEach(c => {
+                receitaTotal += precoPorNome[c.dishName] || 0;
+            });
+        }
+
+        const elReceita = document.getElementById('api-metric-receita-amount');
+        if (elReceita) elReceita.textContent = `${receitaTotal.toFixed(2)} €`;
+
+        // Badge de tendência (verde se > 0, neutro se 0)
+        const badgeReceita = document.getElementById('kpi-receita-trend-container');
+        if (badgeReceita) {
+            badgeReceita.innerHTML = receitaTotal > 0
+                ? `<span style="background:#e8f5e9;color:#2d6a4f;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;">↑ Hoje</span>`
+                : `<span style="background:#f5f5f5;color:#aaa;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;">Sem vendas</span>`;
+        }
+    } catch (e) {
+        const el = document.getElementById('api-metric-receita-amount');
+        if (el) el.textContent = '0.00 €';
+    }
+
+    // ── 2. EQUIPA ATIVA ──────────────────────────────────────
+    try {
+        const users = await getData('/users');
+        const employees = users.filter(u => u.type === 'EMPLOYEE');
+
+        const elEquipa = document.getElementById('api-metric-equipa-count');
+        if (elEquipa) elEquipa.textContent = employees.length;
+
+        const badgeEquipa = document.getElementById('kpi-equipa-status-container');
+        if (badgeEquipa) {
+            badgeEquipa.innerHTML = `<span style="background:#e8f5e9;color:#2d6a4f;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;">● Online</span>`;
+        }
+    } catch (e) {
+        const el = document.getElementById('api-metric-equipa-count');
+        if (el) el.textContent = '0';
+    }
+
+    // ── 3. TABELA DE GESTÃO DE EQUIPA ────────────────────────
+    await carregarTabelaEquipa();
+
+    // ── 4. BOTÃO "CONVIDAR MEMBRO" ───────────────────────────
+    const btnConvidar = document.getElementById('action-trigger-convidar-membro');
+    if (btnConvidar) {
+        // Remove listeners antigos para evitar duplicados
+        btnConvidar.replaceWith(btnConvidar.cloneNode(true));
+        document.getElementById('action-trigger-convidar-membro')
+            .addEventListener('click', () => abrirModalNovoFuncionario());
+    }
+}
+
+// ── Tabela de funcionários ───────────────────────────────────
+async function carregarTabelaEquipa() {
+    const tbody = document.getElementById('api-team-table-rows-container');
+    if (!tbody) return;
+
+    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;padding:20px;color:#aaa;">A carregar equipa...</td></tr>`;
+
+    try {
+        const users = await getData('/users');
+        const employees = users.filter(u => u.type === 'EMPLOYEE');
+
+        if (employees.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;padding:20px;color:#aaa;">Sem funcionários registados.</td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = employees.map(u => `
+            <tr>
+                <td style="padding:12px 16px;">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <div style="width:32px;height:32px;border-radius:50%;background:var(--primary-green,#2d6a4f);
+                                    color:#fff;display:flex;align-items:center;justify-content:center;
+                                    font-weight:700;font-size:13px;flex-shrink:0;">
+                            ${u.username.charAt(0).toUpperCase()}
+                        </div>
+                        <span style="font-weight:600;font-size:14px;">${u.username}</span>
+                    </div>
+                </td>
+                <td style="padding:12px 16px;">
+                    <select onchange="mudarCargoFuncionario('${u.id}', this.value, '${u.username}')"
+                        style="padding:5px 10px;border:1.5px solid #e0e0e0;border-radius:8px;
+                               font-size:13px;font-family:inherit;background:#fff;cursor:pointer;">
+                        <option value="EMPLOYEE" selected>💼 Funcionário</option>
+                        <option value="ADMIN">👑 Admin</option>
+                        <option value="CLIENT">👤 Cliente</option>
+                    </select>
+                </td>
+                <td style="padding:12px 16px;">
+                    <span style="background:#e8f5e9;color:#2d6a4f;border-radius:20px;
+                                 padding:3px 10px;font-size:11px;font-weight:700;">● Ativo</span>
+                </td>
+                <td style="padding:12px 16px;text-align:right;">
+                    <button onclick="apagarUtilizador('${u.id}', '${u.username}', true)"
+                        style="background:#fdecea;color:#c0392b;border:none;border-radius:8px;
+                               padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;">
+                        🗑️ Remover
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+
+    } catch (e) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;padding:20px;color:#c0392b;">Erro ao carregar equipa.</td></tr>`;
+    }
+}
+
+// ── Mudar cargo de um funcionário ───────────────────────────
+async function mudarCargoFuncionario(id, novoTipo, username) {
+    try {
+        await putData(`/users/${id}`, {
+            username: username, 
+            type: novoTipo 
+        });
+        mostrarToast(`Cargo de "${username}" atualizado para ${novoTipo}.`);
+        // Recarrega KPIs para atualizar o contador de equipa ativa
+        await carregarKpisPainel();
+    } catch (e) {
+        mostrarToast('Erro ao atualizar cargo: ' + e.message, 'error');
+        // Reverte o select visualmente recarregando a tabela
+        await carregarTabelaEquipa();
+    }
+}
+
+// ── Modal "Convidar Membro" pré-configurado como EMPLOYEE ───
+function abrirModalNovoFuncionario() {
+    // Reutiliza o modal de utilizadores mas pré-seleciona EMPLOYEE
+    // Injeta o modal se ainda não existir no DOM
+    if (!document.getElementById('modal-utilizador')) {
+        const div = document.createElement('div');
+        div.innerHTML = `
+        <div class="modal-overlay" id="modal-utilizador">
+            <div class="modal-box">
+                <div class="modal-header">
+                    <h2 id="modal-utilizador-titulo">Novo Funcionário</h2>
+                    <button class="btn-modal-close" onclick="fecharModalUtilizador()">✕</button>
+                </div>
+                <div class="form-group">
+                    <label>Username *</label>
+                    <input type="text" id="input-username" placeholder="Ex: joao_silva">
+                </div>
+                <div class="form-group">
+                    <label>Password *</label>
+                    <input type="password" id="input-password-user" placeholder="Mín. 6 caracteres, 1 maiúscula">
+                    <small style="color:#aaa;font-size:11px;margin-top:4px;display:block;">
+                        Deve conter pelo menos uma letra maiúscula
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label>Tipo *</label>
+                    <select id="input-tipo-user">
+                        <option value="CLIENT">Cliente</option>
+                        <option value="EMPLOYEE" selected>Funcionário</option>
+                        <option value="ADMIN">Administrador</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Saldo inicial (€)</label>
+                    <input type="number" id="input-balance-user" placeholder="0" min="0" step="0.01" value="0">
+                </div>
+                <input type="hidden" id="input-id-user">
+                <div class="modal-actions">
+                    <button class="btn-cancelar" onclick="fecharModalUtilizador()">Cancelar</button>
+                    <button class="btn-guardar" onclick="guardarUtilizador(true)">
+                        <i class="fa-solid fa-floppy-disk"></i> Guardar
+                    </button>
+                </div>
+            </div>
+        </div>`;
+        document.body.appendChild(div.firstElementChild);
+    }
+
+    idEmEdicao = null;
+    document.getElementById('modal-utilizador-titulo').textContent = 'Novo Funcionário';
+    document.getElementById('input-username').value = '';
+    document.getElementById('input-password-user').value = '';
+    document.getElementById('input-tipo-user').value = 'EMPLOYEE'; // pré-seleciona
+    document.getElementById('input-balance-user').value = '0';
+    document.getElementById('input-id-user').value = '';
+    document.getElementById('input-username').disabled = false;
+    document.getElementById('modal-utilizador').classList.add('active');
 }

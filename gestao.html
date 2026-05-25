@@ -169,7 +169,7 @@
                                     <button class="btn-invite-member" id="action-trigger-convidar-membro">+ Convidar Membro</button>
                                 </div>
                             </div>
-                            <div class="data-table-wrapper">
+                            <div class="data-table-wrapper" style="max-height: 220px; overflow-y: auto;">
                                 <table class="custom-dashboard-table">
                                     <thead>
                                         <tr>
@@ -235,6 +235,11 @@
             }
             const yearContainer = document.getElementById('current-footer-year-display');
             if (yearContainer) yearContainer.textContent = new Date().getFullYear();
+
+            // Só carrega KPIs se for admin (o painel só é visível para admins)
+            if (role === 'admin') {
+                carregarKpisPainel();
+            }
         });
     </script>
 
